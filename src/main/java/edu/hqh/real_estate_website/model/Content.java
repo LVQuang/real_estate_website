@@ -1,0 +1,23 @@
+package edu.hqh.real_estate_website.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Content {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column()
+    private Long id;
+    private String description;
+    private String address;
+    private Double price;
+
+    @OneToOne(mappedBy = "post")
+    private Post post;
+}
