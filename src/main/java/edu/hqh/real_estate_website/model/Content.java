@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column()
+    @Column(name = "content_id")
     private Long id;
     private String description;
     private String address;
     private Double price;
 
-    @OneToOne(mappedBy = "post")
+    @OneToOne(mappedBy = "content")
     private Post post;
 }
