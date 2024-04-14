@@ -22,9 +22,17 @@ public class User {
     private String phone;
     private String gender;
     private enum role { Admin, Client }
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<UserTransaction> userTransaction = new ArrayList<>();
 
+    // FK With Post one to many
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> posts;
+
+    // FK With Contact many to many
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserContact> userContacts;
+
+    // FK With Transaction many to many
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserTransaction> userTransactions;
+
 }
