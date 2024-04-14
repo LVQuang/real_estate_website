@@ -12,7 +12,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 @Entity
 public class Transaction {
     @Id
@@ -23,4 +22,5 @@ public class Transaction {
 
     @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER)
     private List<UserTransaction> userTransaction = new ArrayList<>();
+
 }

@@ -13,5 +13,8 @@ public class UserContactKey implements Serializable {
 
     @Column(name = "contact_id")
     private Long contactId;
-
+    public UserContactKey(Long userId, Long contactId){
+        this.userId = userId;
+        this.contactId = contactId;
+    }
 }

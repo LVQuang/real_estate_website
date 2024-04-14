@@ -1,12 +1,9 @@
 package edu.hqh.real_estate_website.model;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.*;
 
 import java.util.Date;
-
+@Entity
 public class UserTransaction {
     @EmbeddedId
     private UserTransactionKey id;
