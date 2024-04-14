@@ -20,7 +20,7 @@ public class Transaction {
     private Long buyer;
     private Long seller;
 
+    // FK With User many to many
     @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER)
-    private List<UserTransaction> userTransaction = new ArrayList<>();
-
+    private List<UserTransaction> userTransaction;
 }

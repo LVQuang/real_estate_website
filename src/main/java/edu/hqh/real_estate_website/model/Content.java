@@ -20,4 +20,10 @@ public class Content {
 
     @OneToOne(mappedBy = "content")
     private Post post;
+
+    public Content(String description, String address, Double price) {
+        this.description = description;
+        this.address = address;
+        this.price = price;
+    }
 }

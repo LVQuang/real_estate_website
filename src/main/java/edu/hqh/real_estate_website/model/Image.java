@@ -18,7 +18,7 @@ public class Image {
     private Date createdAt;
     private String link;
 
-    @ManyToOne
     @JoinColumn(name="post_id", nullable=false)
+    @ManyToOne
     private Post post;
 }
