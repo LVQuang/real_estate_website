@@ -18,8 +18,4 @@ public class UserTransactionKey implements Serializable {
     @Column(name = "transaction_id")
     private Long transactionId;
 
-    public UserTransactionKey(Long userId, Long transactionId){
-        this.userId = userId;
-        this.transactionId = transactionId;
-    }
 }
