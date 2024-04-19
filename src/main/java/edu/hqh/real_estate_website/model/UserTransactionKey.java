@@ -17,4 +17,5 @@ public class UserTransactionKey implements Serializable {
 
     @Column(name = "transaction_id")
     private Long transactionId;
+
 }
