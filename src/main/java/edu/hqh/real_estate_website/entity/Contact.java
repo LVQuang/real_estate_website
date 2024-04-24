@@ -16,7 +16,7 @@ import java.util.Date;
 @Entity
 public class Contact {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
     LocalDate contactDate = LocalDate.now();
 }
