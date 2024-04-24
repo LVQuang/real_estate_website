@@ -21,16 +21,21 @@ public class Post {
     private boolean available;
     private enum category { Rent, Sale }
 
-    @OneToMany(mappedBy="post", fetch = FetchType.LAZY)
-    private List<Contact> contacts;
-
+    // FK With user many to one
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
 
+    // FK With Contact one to many
+    @OneToMany(mappedBy="post", fetch = FetchType.LAZY)
+    private List<Contact> contacts;
+
+    // FK With Image one to many
     @OneToMany(mappedBy = "post",fetch = FetchType.LAZY)
     private List<Image> images;
 
+
+    // FK With Content one to one
     @JoinColumn(name = "content_fk_id",referencedColumnName = "content_id")
     @OneToOne
     private Content content;
