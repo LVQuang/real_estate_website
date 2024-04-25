@@ -19,17 +19,17 @@ import java.util.List;
 public class ContactAPI {
     ContactService contactService;
 
-    @PostMapping
-    ApiResponse<ContactResponse> create(@RequestBody ContactRequest request) {
-        return ApiResponse.<ContactResponse>builder()
-                .result(contactService.create(request))
-                .build();
-    }
-
     @GetMapping
     ApiResponse<List<ContactResponse>> getAll() {
         return ApiResponse.<List<ContactResponse>>builder()
                 .result(contactService.getAll())
+                .build();
+    }
+
+    @PostMapping("/{receiveId}")
+    ApiResponse<ContactResponse> create(@RequestBody ContactRequest request, @PathVariable String receiveId) {
+        return ApiResponse.<ContactResponse>builder()
+                .result(contactService.create(request, receiveId))
                 .build();
     }
 

@@ -5,7 +5,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleResponse {
     String name;

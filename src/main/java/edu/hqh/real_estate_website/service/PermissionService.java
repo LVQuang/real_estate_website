@@ -28,14 +28,14 @@ public class PermissionService {
         }
         var permission = permissionMapper.convertEntity(request);
         permission = permissionRepository.save(permission);
-        return permissionMapper.toPermissionResponse(permission);
+        return permissionMapper.toResponse(permission);
     }
 
     public List<PermissionResponse> getAll() {
         var permissions = permissionRepository.findAll();
         return permissions
                 .stream()
-                .map(permissionMapper::toPermissionResponse)
+                .map(permissionMapper::toResponse)
                 .toList();
     }
 

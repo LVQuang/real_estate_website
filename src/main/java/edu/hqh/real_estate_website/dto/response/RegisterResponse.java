@@ -3,17 +3,18 @@ package edu.hqh.real_estate_website.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.util.Set;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ContactResponse {
-    String id;
-    String message;
-    String sender;
-    String receiver;
-    LocalDate contactDate;
+@Builder
+public class RegisterResponse {
+    String name;
+    String password;
+    String email;
+    String phone;
+    Set<RoleResponse> roles;
 }

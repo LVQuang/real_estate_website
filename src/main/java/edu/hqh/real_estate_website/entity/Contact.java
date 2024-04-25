@@ -19,5 +19,7 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String message;
-    LocalDate contactDate = LocalDate.now();
+    String sender;
+    String receiver;
+    LocalDate contactDate;
 }

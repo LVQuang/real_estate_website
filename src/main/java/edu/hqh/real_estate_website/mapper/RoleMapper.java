@@ -10,5 +10,5 @@ import org.mapstruct.Mapping;
 public interface RoleMapper {
     @Mapping(target = "permissions", ignore = true)
     Role convertEntity(RoleRequest request);
-    RoleResponse toRoleResponse(Role role);
+    RoleResponse toResponse(Role role);
 }

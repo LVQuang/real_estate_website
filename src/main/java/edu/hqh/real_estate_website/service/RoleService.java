@@ -28,14 +28,14 @@ public class RoleService {
         var permissions = permissionRepository.findAllById(request.getPermissions());
         role.setPermissions(new HashSet<>(permissions));
         role = roleRepository.save(role);
-        return roleMapper.toRoleResponse(role);
+        return roleMapper.toResponse(role);
     }
 
     public List<RoleResponse> getAll() {
         var roles = roleRepository.findAll();
         return roles
                 .stream()
-                .map(roleMapper::toRoleResponse)
+                .map(roleMapper::toResponse)
                 .toList();
     }
 

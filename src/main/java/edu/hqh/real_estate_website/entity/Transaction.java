@@ -16,7 +16,9 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    LocalDate transactionDate = LocalDate.now();
+    String sender;
+    String receiver;
+    LocalDate transactionDate;
     Double price;
     @ManyToOne
     User user;

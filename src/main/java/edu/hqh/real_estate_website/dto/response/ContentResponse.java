@@ -3,17 +3,15 @@ package edu.hqh.real_estate_website.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ContactResponse {
+public class ContentResponse {
     String id;
-    String message;
-    String sender;
-    String receiver;
-    LocalDate contactDate;
+    String address;
+    String description;
+    Double price;
 }

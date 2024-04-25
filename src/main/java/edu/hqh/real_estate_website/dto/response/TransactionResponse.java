@@ -5,15 +5,15 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ContactResponse {
-    String id;
-    String message;
+public class TransactionResponse {
     String sender;
     String receiver;
-    LocalDate contactDate;
+    LocalDate transactionDate;
+    Double price;
 }
