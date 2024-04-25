@@ -1,4 +1,4 @@
-package edu.hqh.real_estate_website.controller;
+package edu.hqh.real_estate_website.api;
 
 import edu.hqh.real_estate_website.dto.request.PermissionRequest;
 import edu.hqh.real_estate_website.dto.response.ApiResponse;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/permissions")
 @RequiredArgsConstructor @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PermissionController {
+public class PermissionAPI {
     PermissionService permissionService;
 
     @PostMapping
@@ -36,6 +36,9 @@ public class PermissionController {
     @DeleteMapping("/{permission}")
     ApiResponse<Void> delete(@PathVariable String permission) {
         permissionService.delete(permission);
-        return ApiResponse.<Void>builder().build();
+        return ApiResponse.<Void>builder()
+                .code(2045)
+                .message("Item Deleted")
+                .build();
     }
 }

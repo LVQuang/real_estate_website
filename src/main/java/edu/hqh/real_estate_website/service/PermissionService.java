@@ -2,6 +2,8 @@ package edu.hqh.real_estate_website.service;
 
 import edu.hqh.real_estate_website.dto.request.PermissionRequest;
 import edu.hqh.real_estate_website.dto.response.PermissionResponse;
+import edu.hqh.real_estate_website.enums.ErrorCode;
+import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.PermissionMapper;
 import edu.hqh.real_estate_website.repository.PermissionRepository;
 import lombok.AccessLevel;
@@ -21,7 +23,10 @@ public class PermissionService {
     PermissionMapper permissionMapper;
 
     public PermissionResponse create(PermissionRequest request) {
-        var permission = permissionMapper.createPermission(request);
+        if(permissionRepository.existsById(request.getName())) {
+            throw new AppException(ErrorCode.ITEM_EXISTS);
+        }
+        var permission = permissionMapper.convertEntity(request);
         permission = permissionRepository.save(permission);
         return permissionMapper.toPermissionResponse(permission);
     }
@@ -35,6 +40,8 @@ public class PermissionService {
     }
 
     public void delete(String permission) {
+        if(!permissionRepository.existsById(permission))
+            throw new AppException(ErrorCode.ITEM_DONT_EXISTS);
         permissionRepository.deleteById(permission);
     }
 }

@@ -7,9 +7,9 @@ import lombok.experimental.FieldDefaults;
 
 @Getter
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum RoleName {
-    ADMIN("ROLE_ADMIN"),
-    USER("ROLE_USER");
+    ADMIN("ADMIN"),
+    USER("USER");
     String name;
 }
