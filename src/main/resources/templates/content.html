@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <title>Content of post</title>
+</head>
+<style>
+    .carousel-item img {
+        height: 50vh;
+        width: auto;
+        object-fit: cover;
+    }
+
+    .carousel-container, .content-container {
+        width: 55%;
+    }
+
+     .pagination {
+        margin-top: 1rem;
+    }
+
+    .pagination .page-link{
+        opacity:0.5;
+        background-color: white;
+        color:black;
+    }
+
+    .pagination .page-item.active {
+        background-color: grey;
+    }
+
+    .p2 {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .p2 .price-info, .created-info{
+        display: inline-block;
+        margin-right: 4rem;
+    }
+
+    .p2 .available-info {
+        margin-left: auto;
+    }
+
+    .p3 textarea {
+        width: 100%;
+        height:100%;
+    }
+
+</style>
+<body>
+<div th:insert="~{navbar.html}"></div>
+<div class="row justify-content-center" style="margin-top:2rem">
+    <div class="carousel-container">
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://static-xf1.vietnix.vn/wp-content/uploads/2022/07/Spring-BOOT.webp" class="d-block w-100" alt="">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://static-xf1.vietnix.vn/wp-content/uploads/2022/07/Spring-BOOT.webp" class="d-block w-100" alt="">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://static-xf1.vietnix.vn/wp-content/uploads/2022/07/Spring-BOOT.webp" class="d-block w-100" alt="">
+                </div>
+            </div>
+            <ul id="pagination" class="pagination justify-content-center">
+
+                <li class="page-item">
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                </li>
+
+                <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                <li class="page-item"><a href="#" class="page-link">2</a></li>
+                <li class="page-item"><a href="#" class="page-link">3</a></li>
+
+                <li class="page-item">
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="row justify-content-center" style="margin-top:2rem">
+    <div class="content-container">
+        <div class="p1">
+            <h3>Title of post</h3>
+            <p>Address</p>
+            <hr style="border-color: #333">
+        </div>
+
+        <div class="p2">
+            <div class="price-info">
+                <p>Price</p>
+                <h5>$$</h5>
+            </div>
+            <div class="created-info">
+                <p>CreatedAt</p>
+                <h5>dd//MM/YYYY</h5>
+            </div>
+            <div class="available-info">
+                <p>Status</p>
+                <h5>Available</h5>
+            </div>
+            <hr style="border-color: #333">
+        </div>
+
+        <div class="p3">
+            <h3>Description</h3>
+            <textarea rows="8" maxlength="500"></textarea>
+        </div>
+    </div>
+</div>
+
+<div th:insert="~{footer.html}"></div>
+
+<!--Logic cho chuyen so trang-->
+<script>
+    var carousel = document.getElementById('carouselExampleControls');
+    var pagination = document.getElementById('pagination');
+    carousel.addEventListener('slide.bs.carousel', function (event) {
+        var activeIndex = event.to;
+        var pageLinks = pagination.getElementsByTagName('a');
+        for (var i = 0; i < pageLinks.length; i++) {
+            if (i === activeIndex) {
+                pageLinks[i].parentNode.classList.add('active');
+            } else {
+                pageLinks[i].parentNode.classList.remove('active');
+            }
+        }
+    });
+
+    // Chuyen trang theo nut Previous va Next
+    var carousel = new bootstrap.Carousel(document.getElementById('carouselExampleControls'));
+    document.querySelector('.carousel-control-prev').addEventListener('click', function () {
+        carousel.prev();
+    });
+    document.querySelector('.carousel-control-next').addEventListener('click', function () {
+        carousel.next();
+    });
+</script>
+</body>
+</html>

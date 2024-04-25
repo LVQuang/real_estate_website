@@ -14,7 +14,5 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContentService {
     ContentRepository contentRepository;
-    ContentMapper contentMapper;
-
-    
+    ContentMapper contentMapper;    
 }
