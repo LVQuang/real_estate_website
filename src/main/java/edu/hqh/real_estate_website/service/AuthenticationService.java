@@ -11,7 +11,7 @@ import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.RoleName;
 import edu.hqh.real_estate_website.exception.AppException;
-import edu.hqh.real_estate_website.mapper.UserMapper;
+import edu.hqh.real_estate_website.mapper.RegisterMapper;
 import edu.hqh.real_estate_website.repository.RoleRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
@@ -27,7 +27,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.StringJoiner;
 
 @Service
@@ -36,11 +35,25 @@ import java.util.StringJoiner;
 public class AuthenticationService {
     UserRepository userRepository;
     RoleRepository roleRepository;
-    UserMapper userMapper;
+    RegisterMapper registerMapper;
     PasswordEncoder passwordEncoder;
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
+
+    public RegisterResponse register(RegisterRequest request) {
+        if(userRepository.existsByName(request.getName()))
+            throw new AppException(ErrorCode.ITEM_EXISTS);
+
+        var user = registerMapper.convertEntity(request);
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        var role = roleRepository.findById(RoleName.USER.getName()).orElse(null);
+        user.setRoles(Collections.singleton(role));
+
+        return registerMapper.toResponse(userRepository.save(user));
+    }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = userRepository.findByName(request.getName()).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
@@ -53,20 +66,6 @@ public class AuthenticationService {
                 .token(token)
                 .authenticated(true)
                 .build();
-    }
-
-    public RegisterResponse register(RegisterRequest request) {
-        if(userRepository.existsByName(request.getName()))
-            throw new AppException(ErrorCode.ITEM_EXISTS);
-
-        var user = userMapper.convertEntity(request);
-
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        var role = roleRepository.findById(RoleName.USER.getName()).orElse(null);
-        user.setRoles(Collections.singleton(role));
-
-        return userMapper.toResponse(userRepository.save(user));
     }
 
     private String generateToken(User user) {

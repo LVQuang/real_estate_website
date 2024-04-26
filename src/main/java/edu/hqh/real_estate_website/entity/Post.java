@@ -17,8 +17,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String title;
-    LocalDate postDate = LocalDate.now();
+    LocalDate postDate;
     boolean available;
+    String type;
     @OneToOne(mappedBy = "post")
     Content content;
     @ManyToOne
