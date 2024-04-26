@@ -1,31 +1,17 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-<style>
+<link rel="stylesheet" type="text/css" href="/static/css/slider.css">
 
-    .carousel-item img {
-        height: 50vh;
-        width: 100%;
-        object-fit: cover;
-    }
-
-    .carousel-container {
-        position: relative;
-    }
-
-    .search-form {
-        position: absolute;
-        z-index: 999;
-        left:50%;
-        transform: translateX(-50%);
-        margin-top: 2rem
-    }
-</style>
 
 <div class="row justify-content-center" style="margin-top:2rem">
     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
         <form class="search-form d-flex justify-content-center" role="search">
-            <input class="form-control me-2" style="width: 500px;opacity:0.5" type="search" placeholder="What your choice ?" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <input class="form-control me-2" style="width: 550px" type="search" placeholder="What your choice ?" aria-label="Search">
+            <button class="btn" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.397l3.864 3.864a1 1 0 0 0 1.415-1.414l-3.864-3.864zM11 6.5a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0z"/>
+                </svg>
+            </button>
         </form>
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -47,5 +33,4 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-
 </div>
