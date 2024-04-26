@@ -1,22 +1,57 @@
 package edu.hqh.real_estate_website.service;
 
-import edu.hqh.real_estate_website.model.Content;
+import edu.hqh.real_estate_website.dto.request.ContentRequest;
+import edu.hqh.real_estate_website.dto.response.ContentResponse;
+import edu.hqh.real_estate_website.entity.Content;
+import edu.hqh.real_estate_website.enums.ErrorCode;
+import edu.hqh.real_estate_website.exception.AppException;
+import edu.hqh.real_estate_website.mapper.ContentMapper;
 import edu.hqh.real_estate_website.repository.ContentRepository;
-import lombok.AllArgsConstructor;
+import edu.hqh.real_estate_website.repository.PostRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+@Slf4j
 @Service
-@AllArgsConstructor
 public class ContentService {
     ContentRepository contentRepository;
+    PostRepository postRepository;
+    ContentMapper contentMapper;
 
-    public Content findById(Long id) { return contentRepository.findById(id).orElse(null); }
+    public ContentResponse getById(String id) {
+        var content = contentRepository.findById(id).orElseThrow(()
+                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        return contentMapper.toResponse(content);
+    }
 
-    public void addAndUpdate(Content content) { contentRepository.save(content); }
+    public void delete(String id) {
+        var content = contentRepository.findById(id).orElseThrow(()
+                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        var post = content.getPost();
+        post.setContent(null);
+        postRepository.save(post);
+        contentRepository.deleteById(id);
+    }
 
-    public  void delete(Long id) { contentRepository.deleteById(id); }
+    public ContentResponse update(ContentRequest request, String id) {
+        var content = contentRepository.findById(id).orElseThrow(()
+                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        contentMapper.update(content, request);
+        var post = content.getPost();
+        post.setContent(content);
+        postRepository.save(post);
+        contentRepository.save(content);
+        return contentMapper.toResponse(content);
+    }
 
-    public List<Content> getAll() { return contentRepository.findAll(); }
+    public ContentResponse create(ContentRequest request) {
+        var content = contentMapper.convertEntity(request);
+        contentRepository.save(content);
+        return contentMapper.toResponse(content);
+    }
 }
