@@ -29,4 +29,6 @@ public class Post {
     PostState available;
     @OneToMany
     Set<Transaction> transactions;
+    @OneToMany
+    Set<Image> images;
 }
