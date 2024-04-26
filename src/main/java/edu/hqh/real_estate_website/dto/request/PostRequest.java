@@ -4,16 +4,20 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class PostUpdateRequest {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class PostRequest {
     String title;
-    LocalDate postDate;
-    boolean available;
     String type;
+    String address;
+    String description;
+    Double price;
+    String available;
+    Set<String> transactions;
 }
