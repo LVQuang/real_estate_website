@@ -1,9 +1,11 @@
 package edu.hqh.real_estate_website.dto.response;
 
+import edu.hqh.real_estate_website.enums.PostState;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -11,12 +13,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PostResponse {
-    String id;
+public class PostListingResponse {
     String title;
-    LocalDate postDate;
-    boolean available;
     String type;
-    ContentResponse content;
-    UserResponse user;
+    String address;
+    Double price;
+    LocalDate postDate;
+    PostState available;
 }
