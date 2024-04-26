@@ -4,14 +4,18 @@ footer {
    width:100%;
 }
 
+.social-icons{
+    text-align:center;
+}
+
 .social-icons li {
     display: inline;
     margin-left: 10px;
 }
 
+
 span{
     font-size: 20px;
-    text-align: center;
 }
 
 
@@ -32,3 +36,4 @@ li a{
 .p1_column,.p2_column,.p3_column{
     text-align:center;
 }
+
