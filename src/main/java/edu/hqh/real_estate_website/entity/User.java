@@ -26,7 +26,7 @@ public class User {
     Set<Role> roles;
     @ManyToMany
     Set<Contact> contacts;
-    @OneToMany(mappedBy = "user")
+    @ManyToMany()
     Set<Transaction> transactions;
     @OneToMany(mappedBy = "user")
     Set<Post> posts;

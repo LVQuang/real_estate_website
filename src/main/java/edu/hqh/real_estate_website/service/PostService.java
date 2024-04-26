@@ -1,20 +1,25 @@
 package edu.hqh.real_estate_website.service;
 
-import edu.hqh.real_estate_website.dto.request.ContentRequest;
-import edu.hqh.real_estate_website.dto.request.PostUpdateRequest;
-import edu.hqh.real_estate_website.dto.response.ContentResponse;
-import edu.hqh.real_estate_website.dto.response.PostResponse;
+import edu.hqh.real_estate_website.dto.request.PostRequest;
+import edu.hqh.real_estate_website.dto.response.PostDetailResponse;
+import edu.hqh.real_estate_website.dto.response.PostListingResponse;
 import edu.hqh.real_estate_website.enums.ErrorCode;
+import edu.hqh.real_estate_website.enums.PostState;
 import edu.hqh.real_estate_website.exception.AppException;
-import edu.hqh.real_estate_website.mapper.ContentMapper;
 import edu.hqh.real_estate_website.mapper.PostMapper;
-import edu.hqh.real_estate_website.repository.ContentRepository;
 import edu.hqh.real_estate_website.repository.PostRepository;
+import edu.hqh.real_estate_website.repository.TransactionRepository;
+import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -22,30 +27,61 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostService {
     PostRepository postRepository;
+    UserRepository userRepository;
+    TransactionRepository transactionRepository;
     PostMapper postMapper;
 
-    public PostResponse getById(String id) {
+    public PostDetailResponse getById(String id) {
         var post = postRepository.findById(id).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
         return postMapper.toResponse(post);
     }
 
+    public List<PostListingResponse> getAll() {
+        var posts = postRepository.findAll();
+        return posts
+                .stream()
+                .map(postMapper::toListResponse)
+                .toList();
+    }
+
     public void delete(String id) {
-        var post = postRepository.findById(id).orElseThrow(()
-                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        if(!postRepository.existsById(id))
+            throw new AppException(ErrorCode.ITEM_DONT_EXISTS);
         postRepository.deleteById(id);
     }
 
-//    public PostResponse update(PostUpdateRequest request, String id) {
-//        var post = postRepository.findById(id).orElseThrow(()
-//                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
-//        postMapper.update(post, request);
-//        return contentMapper.toResponse(content);
-//    }
-//
-//    public ContentResponse create(ContentRequest request) {
-//        var content = contentMapper.convertEntity(request);
-//        contentRepository.save(content);
-//        return contentMapper.toResponse(content);
-//    }
+    public PostDetailResponse create(PostRequest request) {
+        var post = postMapper.convertEntity(request);
+        var userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = userRepository.findByName(userName).orElseThrow(()
+                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        var userPost = user.getPosts();
+        userPost.add(post);
+
+        post.setUser(user);
+        user.setPosts(userPost);
+        post.setPostDate(LocalDate.now());
+        post.setAvailable(PostState.YES);
+
+        userRepository.save(user);
+        return postMapper.toResponse(postRepository.save(post));
+    }
+
+    public PostDetailResponse update(PostRequest request, String id) {
+        var post = postRepository.findById(id).orElseThrow(()
+                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+
+        postMapper.update(post, request);
+        if(request.getTransactions() != null) {
+            var transactions = transactionRepository
+                    .findAllById(request.getTransactions());
+            post.setTransactions(new HashSet<>(transactions));
+        }
+        post.setAvailable(PostState.valueOf(request.getAvailable()));
+
+        postRepository.save(post);
+
+        return postMapper.toResponse(post);
+    }
 }

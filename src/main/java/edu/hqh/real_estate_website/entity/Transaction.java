@@ -21,5 +21,5 @@ public class Transaction {
     LocalDate transactionDate;
     Double price;
     @ManyToOne
-    User user;
+    Post post;
 }
