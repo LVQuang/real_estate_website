@@ -1,0 +1,160 @@
+ body {
+       height: 150vh;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       flex-direction: column;
+   }
+
+   .baseInfo_container {
+       border-radius: 10px;
+       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25),
+           0 2px 2px rgba(0, 0, 0, 0.10);
+       position: relative;
+       width: 45%;
+       height: 25%;
+   }
+
+   .row{
+        margin-top: 1rem;
+   }
+
+   form {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 30px;
+        height: 100%;
+   }
+
+    .type_content_container{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        transition: 0.5s;
+    }
+
+    .type_content{
+        width:50%;
+        background-color: white;
+        border: 0.5px solid #a9a9a9;
+        border-radius: 3px;
+    }
+
+     .type_content_container .type_content:hover{
+            background: #D6D3D3;
+            color: white;
+            opacity: 0.9;
+     }
+
+     .active {
+        background: rgb(224, 60, 49);
+        color: white;
+     }
+
+    .address_p1_container,.address_p2_container{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .province_container, .district_container{
+         width:49%;
+    }
+
+    .p1{
+        width:100%;
+        border-radius: 5px;
+    }
+
+     .ward_container, .street_container{
+         width:49%;
+    }
+
+    .p2{
+        width:100%;
+        border-radius: 5px;
+    }
+
+    p{
+        font-weight: bold;
+        font-size:18px;
+    }
+
+    .desInfo_container{
+       margin-top: 20px;
+       border-radius: 10px;
+       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25),
+           0 2px 2px rgba(0, 0, 0, 0.10);
+       position: relative;
+       width: 45%;
+       height: 44%;
+    }
+
+     .description_p1_container,.description_p2_container,.description_p3_container{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+     .title_container, .description_container,.price_container{
+         width:100%;
+    }
+
+    textarea, input{
+        width:100%;
+        border-radius: 5px;
+    }
+
+
+    .imageInfo_container{
+       margin-top: 20px;
+       border-radius: 10px;
+       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25),
+           0 2px 2px rgba(0, 0, 0, 0.10);
+       position: relative;
+       width: 45%;
+       height: 10%;
+    }
+
+     .contactInfo_container{
+       margin-top: 20px;
+       border-radius: 10px;
+       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25),
+           0 2px 2px rgba(0, 0, 0, 0.10);
+       position: relative;
+       width: 45%;
+       height: 25%;
+    }
+
+    .contact_p1_container, .contact_p2_container{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .name_container,.phone_container,.email_container{
+        width: 49%;
+    }
+
+    .contact_name,.contact_phone,.contact_email,.description_price{
+        border: 0.5px solid #a9a9a9;
+    }
+
+    .button_next_container{
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+    }
+
+    .button_next{
+       background-color: rgb(224, 60, 49);
+       color: white;
+       border: 1px solid rgb(224, 60, 49);
+       border-radius: 5px;
+       font-size: 18px;
+    }
+
+    .button_next:hover{
+        opacity: 0.9;
+    }

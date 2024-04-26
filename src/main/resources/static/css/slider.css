@@ -1,0 +1,25 @@
+.carousel-item img {
+    height: 60vh;
+    width: 100%;
+    object-fit: cover;
+}
+
+.carousel-container {
+    position: relative;
+}
+
+.search-form {
+    position: absolute;
+    z-index: 999;
+    left:50%;
+    transform: translateX(-50%);
+    margin-top: 2rem;
+}
+
+input:focus::placeholder {
+color: white;
+}
+
+.btn{
+  transform: translateX(-120%);
+}
