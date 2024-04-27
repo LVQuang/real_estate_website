@@ -14,10 +14,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -30,15 +27,16 @@ public class AuthenticationAPI {
     AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request, HttpServletRequest httpRequest) {
         var result = authenticationService.authenticate(request);
+        httpRequest.getSession().setAttribute("myToken", result.getToken());
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
                 .build();
     }
 
-    @PostMapping
-    String authenticate(HttpServletRequest request, @RequestBody String token) throws IOException {
+    @GetMapping("/{token}")
+    String authenticate(HttpServletRequest request, @PathVariable String token) throws IOException {
         request.getSession().setAttribute("myToken", token);
         return "Hello";
     }

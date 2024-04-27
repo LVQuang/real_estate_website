@@ -1,7 +1,7 @@
 package edu.hqh.real_estate_website.config;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +19,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.util.WebUtils;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -37,7 +35,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
-                        request.anyRequest().permitAll())
+                        request
+                                .requestMatchers("/api/auth/**").permitAll()
+                                .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2
                                 .bearerTokenResolver(this::tokenExtractor)
@@ -51,24 +51,13 @@ public class SecurityConfig {
     }
 
     String tokenExtractor(HttpServletRequest request) {
-        Cookie cookie =WebUtils.getCookie(request, "myToken");
-        if(cookie != null)
-            log.info(cookie.getValue());
+        HttpSession session = request.getSession();
+        String token =(String) session.getAttribute("myToken");
+        log.info("My token: " + token);
+        if(token != null)
+            return token;
         else
-            log.info("Don't have cookie");
-        return new DefaultBearerTokenResolver().resolve(request);
-    }
-
-    String getTokenFromCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
+            return new DefaultBearerTokenResolver().resolve(request);
     }
 
     @Bean
