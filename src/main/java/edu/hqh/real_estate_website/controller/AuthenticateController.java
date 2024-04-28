@@ -34,8 +34,19 @@ public class AuthenticateController {
         return "index";
     }
 
-    @GetMapping("/hello")
-    String test() {
-        return "test";
-    }
+//    @GetMapping("/login")
+//    String showLogin() {
+//        return "login";
+//    }
+//
+//    @GetMapping("/register")
+//    String showRegister() {
+//        return "register";
+//    }
+
+//    @GetMapping
+//    String sendEmail(HttpServletRequest httpServletRequest, Model model){
+//
+//    };
+
 }

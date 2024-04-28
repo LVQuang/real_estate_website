@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request
 //                                .requestMatchers("/api/auth/**").permitAll()
-//                                .requestMatchers("/view/auth").permitAll()
+//                                .requestMatchers("/view/auth/**").permitAll()
                                 .anyRequest().permitAll())
                 .addFilterAt(new SessionFilter(), BearerTokenAuthenticationFilter.class)
                 .oauth2ResourceServer(oauth2 ->
