@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .anyRequest().authenticated())
+                                .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2
                                 .bearerTokenResolver(this::tokenExtractor)

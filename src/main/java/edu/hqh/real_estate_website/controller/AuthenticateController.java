@@ -13,19 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-@RequestMapping("/view/auth")
 @Controller
 public class AuthenticateController {
 
     AuthenticationService authenticationService;
 
-    @GetMapping
-    String authenticate(HttpServletResponse response) {
-        return "index";
-    }
+    @GetMapping("/login")
+    String login(HttpServletResponse response)
+    {
 
-    @GetMapping("/hello")
-    String test() {
-        return "listImageSample";
+        return "login";
     }
 }
