@@ -14,6 +14,7 @@ import edu.hqh.real_estate_website.dto.response.RegisterResponse;
 import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.RoleName;
+import edu.hqh.real_estate_website.enums.UserGender;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.exception.WebException;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
@@ -41,6 +42,7 @@ import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
     UserRepository userRepository;
@@ -73,6 +75,9 @@ public class AuthenticationService {
         var role = roleRepository.findById(RoleName.USER.getName()).orElse(null);
         user.setRoles(Collections.singleton(role));
 
+        user.setGender(UserGender.valueOf(request.getGender()));
+
+        log.info(user.getGender().name());
         return registerMapper.toResponse(userRepository.save(user));
     }
 

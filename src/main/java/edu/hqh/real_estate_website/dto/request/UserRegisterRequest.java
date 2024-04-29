@@ -3,17 +3,22 @@ package edu.hqh.real_estate_website.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class RegisterRequest {
+public class UserRegisterRequest {
+    @NonNull
     String name;
+    @NonNull
     String email;
+    @NonNull
     String phone;
     String gender;
+    @NonNull
     String password;
+    @NonNull
+    String re_password;
 }

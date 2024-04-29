@@ -19,15 +19,16 @@
             class="shadow-lg rounded d-flex align-items-center justify-content-center flex-row-reverse">
 
         <div class="form_container h-100 w-50" style="z-index: 1;">
-            <form class="d-flex align-items-center justify-content-center flex-column h-100 bg-white px-5"
+            <form class="d-flex align-items-center justify-content-center flex-column h-100 px-5"
                   method="post"
+                  style="gap: 1.5rem"
                   role= "form"
                   th:action="@{/login}"
                   th:object="${user}"
             >
                 <h1>Login</h1>
 
-                <input class="form-control my-2"
+                <input class="form-control"
                        type="text"
                        name="username"
                        placeholder="Username"
@@ -35,17 +36,22 @@
                        required >
 
                 <input id="password"
-                       class="form-control my-2"
+                       class="form-control"
                        type="password"
                        name="password"
                        placeholder="Password"
                        th:field="*{pass}"
                        required>
-                <button  class="btn btn-outline-success btn-lg btn-block my-2" type="submit" name="login">Login</button>
-                <a href="" class = "fs-5 text-decoration-none text-dark my-1"> Forgot password ?</a>
+                <button  class="btn btn-outline-success btn-lg btn-block" type="submit" name="login">Login</button>
+                <a href="" class = "fs-5 text-decoration-none text-dark"> Forgot password ?</a>
                 <div th:if="${param.incorrect}">
                     <div class="alert alert-danger">
                         Password or Username is not correct!
+                    </div>
+                </div>
+                <div th:if="${param.register_success}">
+                    <div class="alert alert-success">
+                        Congratulate for success creating account !
                     </div>
                 </div>
             </form>
@@ -65,18 +71,6 @@
             color: white;
         }
     </style>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        function myFunction() {
-            const x = document.getElementById("myInput");
-            if (x.type === "password") {
-                x.type = "text";
-            } else {
-                x.type = "password";
-            }
-        }
-    });
-</script>
 
 </body>
 </html>
