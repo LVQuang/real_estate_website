@@ -43,7 +43,7 @@
                        th:field="*{pass}"
                        required>
                 <button  class="btn btn-outline-success btn-lg btn-block my-2" type="submit" name="login">Login</button>
-                <a href="" class = "fs-5 text-decoration-none text-dark my-1"> Forgot password ?</a>
+                <a href="/ForgotPassword" class = "fs-5 text-decoration-none text-dark my-1"> Forgot password ?</a>
                 <div th:if="${param.success}">
                     <div class="alert alert-danger">
                         Password or Username is not correct!

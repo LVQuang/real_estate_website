@@ -1,7 +1,10 @@
 package edu.hqh.real_estate_website.controller;
 
+import edu.hqh.real_estate_website.dto.request.ForgotPasswordRequest;
+import edu.hqh.real_estate_website.dto.request.UserForgotPasswordRequest;
 import edu.hqh.real_estate_website.dto.request.UserLoginRequest;
 import edu.hqh.real_estate_website.mapper.AuthenticationMapper;
+import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.service.AuthenticationService;
 import edu.hqh.real_estate_website.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +29,7 @@ public class AuthenticateController {
 
     AuthenticationService authenticationService;
     AuthenticationMapper authenticationMapper;
+    ForgotPasswordMapper forgotPasswordMapper;
 
     @GetMapping("/login")
     String login(Model model)
@@ -48,5 +52,28 @@ public class AuthenticateController {
             httpRequest.getSession().setAttribute("myToken", authentication.getToken());
             return "index";
         }
+    }
+
+    @GetMapping("/ForgotPassword")
+    String forgot(Model model){
+        UserForgotPasswordRequest user = new UserForgotPasswordRequest();
+        model.addAttribute("user", user);
+        return "forgotPassword";
+    }
+
+    @PostMapping("/ForgotPassword")
+    String testForgot(@Valid @ModelAttribute("user") UserForgotPasswordRequest user
+            ,HttpServletRequest httpRequest){
+        var authRequest = forgotPasswordMapper.toAuthenticationRequest(user);
+        var authentication = authenticationService.forgotPassword(authRequest);
+        httpRequest.getSession().setAttribute("email", authentication.getEmail());
+        return "redirect:/ForgotPassword";
+    }
+
+    @GetMapping("/ResetPassword")
+    String reset(Model model){
+        UserForgotPasswordRequest user = new UserForgotPasswordRequest();
+        model.addAttribute("user", user);
+        return "resetPassword";
     }
 }

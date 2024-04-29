@@ -48,6 +48,7 @@ public class AuthenticationService {
     RegisterMapper registerMapper;
     PasswordEncoder passwordEncoder;
     ForgotPasswordMapper forgotPasswordMapper;
+    JavaMailSender javaMailSender;
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -130,6 +131,26 @@ public class AuthenticationService {
                 }
             });
         return stringJoiner.toString();
+    }
+
+    public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request){
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+
+        String resetLink = "http://localhost:8080/ResetPassword";
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom("hungnguyen1372003@gmail.com");// input the senders email ID
+        msg.setTo(user.getEmail());
+
+        msg.setSubject("Welcome To Our Website");
+        msg.setText("Hello " + user.getName() + "\n\n" + "Please click on this link to Reset your Password :"
+                + resetLink);
+
+        javaMailSender.send(msg);
+
+        return ForgotPasswordResponse.builder()
+                .email(user.getEmail())
+                .build();
     }
 
     public ForgotPasswordResponse resetPassword(ForgotPasswordRequest request) {
