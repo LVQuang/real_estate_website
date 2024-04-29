@@ -3,8 +3,9 @@ package edu.hqh.real_estate_website.controller;
 import edu.hqh.real_estate_website.dto.request.UserForgotPasswordRequest;
 import edu.hqh.real_estate_website.dto.request.UserLoginRequest;
 import edu.hqh.real_estate_website.dto.request.UserRegisterRequest;
-import edu.hqh.real_estate_website.dto.request.UserResetPasswordRequest;
+import edu.hqh.real_estate_website.enums.UserGender;
 import edu.hqh.real_estate_website.mapper.AuthenticationMapper;
+import edu.hqh.real_estate_website.dto.request.UserResetPasswordRequest;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
 import edu.hqh.real_estate_website.repository.UserRepository;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class AuthenticateController {
     private final UserRepository userRepository;
+
     AuthenticationService authenticationService;
     AuthenticationMapper authenticationMapper;
     ForgotPasswordMapper forgotPasswordMapper;
@@ -104,5 +106,10 @@ public class AuthenticateController {
             return "redirect:/auth/register?user_exists_name";
         authenticationService.register(request);
         return "redirect:/auth/login?register_success";
+    }
+
+    @GetMapping("/test")
+    String test() {
+        return "index";
     }
 }

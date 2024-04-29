@@ -37,8 +37,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request
 
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/auth/**").permitAll()
+//                                .requestMatchers("/api/auth/**").permitAll()
+//                                .requestMatchers("/auth/**").permitAll()
                                 .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2
@@ -55,7 +55,6 @@ public class SecurityConfig {
     String tokenExtractor(HttpServletRequest request) {
         HttpSession session = request.getSession();
         String token =(String) session.getAttribute("myToken");
-        log.info("My token: " + token);
         if(token != null)
             return token;
         else
