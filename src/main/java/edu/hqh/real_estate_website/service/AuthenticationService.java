@@ -112,14 +112,11 @@ public class AuthenticationService {
 
     public ForgotPasswordResponse resetPassword(ForgotPasswordRequest request) {
 
-        if(!userRepository.existsByEmail(request.getEmail()))
-            throw new AppException(ErrorCode.ITEM_DONT_EXISTS);
-
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new AppException(ErrorCode.OTHER_EXCEPTION);
+            throw new AppException(ErrorCode.DUPLICATE_PASSWORD);
         }
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
