@@ -84,7 +84,10 @@ public class AuthenticationService {
 
         if(!authenticated || token == null) {
             if(web)
-                throw new WebException(ErrorCode.INCORRECTPASSWORD);
+                return AuthenticationResponse.builder()
+                        .token(null)
+                        .authenticated(false)
+                        .build();
             else
                 throw new AppException(ErrorCode.INCORRECTPASSWORD);
         }

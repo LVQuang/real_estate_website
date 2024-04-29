@@ -42,7 +42,7 @@ public class AuthenticateController {
         var authentication = authenticationService.authenticate(authRequest, true);
         log.info(String.valueOf(authentication.isAuthenticated()));
         if(!authentication.isAuthenticated())
-            return "redirect:/login/?incorrect";
+            return "redirect:/login?incorrect";
         else
         {
             httpRequest.getSession().setAttribute("myToken", authentication.getToken());
