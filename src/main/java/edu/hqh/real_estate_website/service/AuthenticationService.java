@@ -13,6 +13,7 @@ import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.RoleName;
 import edu.hqh.real_estate_website.exception.AppException;
+import edu.hqh.real_estate_website.exception.WebException;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
 import edu.hqh.real_estate_website.repository.RoleRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
@@ -70,13 +71,19 @@ public class AuthenticationService {
         return registerMapper.toResponse(userRepository.save(user));
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request, boolean web) {
         var user = userRepository.findByName(request.getName()).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
         boolean authenticated = passwordEncoder
                 .matches(request.getPass(), user.getPassword());
-        if(!authenticated)
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generateToken(user);
+
+        if(!authenticated || token == null) {
+            if(web)
+                throw new WebException(ErrorCode.INCORRECTPASSWORD);
+            else
+                throw new AppException(ErrorCode.INCORRECTPASSWORD);
+        }
+
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
@@ -103,9 +110,8 @@ public class AuthenticationService {
         try {
             jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
             return jwsObject.serialize();
-        } catch (JOSEException e) {
-
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        } catch (Exception e) {
+            return null;
         }
     }
 
