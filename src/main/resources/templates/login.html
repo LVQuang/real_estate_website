@@ -43,7 +43,7 @@
                        required>
                 <button  class="btn btn-outline-success btn-lg btn-block my-2" type="submit" name="login">Login</button>
                 <a href="" class = "fs-5 text-decoration-none text-dark my-1"> Forgot password ?</a>
-                <div th:if="${param.success}">
+                <div th:if="${param.incorrect}">
                     <div class="alert alert-danger">
                         Password or Username is not correct!
                     </div>
