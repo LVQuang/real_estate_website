@@ -15,6 +15,7 @@ import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.RoleName;
 import edu.hqh.real_estate_website.exception.AppException;
+import edu.hqh.real_estate_website.exception.WebException;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
 import edu.hqh.real_estate_website.repository.RoleRepository;
@@ -25,8 +26,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -38,7 +37,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.StringJoiner;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -76,13 +74,19 @@ public class AuthenticationService {
         return registerMapper.toResponse(userRepository.save(user));
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request, boolean web) {
         var user = userRepository.findByName(request.getName()).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
         boolean authenticated = passwordEncoder
                 .matches(request.getPass(), user.getPassword());
-        if(!authenticated)
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generateToken(user);
+
+        if(!authenticated || token == null) {
+            if(web)
+                throw new WebException(ErrorCode.INCORRECTPASSWORD);
+            else
+                throw new AppException(ErrorCode.INCORRECTPASSWORD);
+        }
+
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
@@ -109,9 +113,8 @@ public class AuthenticationService {
         try {
             jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
             return jwsObject.serialize();
-        } catch (JOSEException e) {
-
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        } catch (Exception e) {
+            return null;
         }
     }
 

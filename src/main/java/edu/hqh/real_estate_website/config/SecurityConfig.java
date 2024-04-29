@@ -38,11 +38,7 @@ public class SecurityConfig {
                         request
 
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/view/auth/**").permitAll()
-//                                 .anyRequest().authenticated()
                                 .anyRequest().permitAll())
-                .addFilterAt(new SessionFilter(), BearerTokenAuthenticationFilter.class)
-
                 .oauth2ResourceServer(oauth2 ->
                         oauth2
                                 .bearerTokenResolver(this::tokenExtractor)

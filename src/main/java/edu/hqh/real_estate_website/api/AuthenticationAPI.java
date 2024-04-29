@@ -31,7 +31,7 @@ public class AuthenticationAPI {
 
     @PostMapping("/login")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request, HttpServletRequest httpRequest) {
-        var result = authenticationService.authenticate(request);
+        var result = authenticationService.authenticate(request, false);
         httpRequest.getSession().setAttribute("myToken", result.getToken());
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
