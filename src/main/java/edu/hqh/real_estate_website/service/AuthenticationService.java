@@ -2,7 +2,9 @@ package edu.hqh.real_estate_website.service;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import edu.hqh.real_estate_website.dto.request.AuthenticationRequest;
 import edu.hqh.real_estate_website.dto.request.ForgotPasswordRequest;
 import edu.hqh.real_estate_website.dto.request.RegisterRequest;
@@ -13,6 +15,7 @@ import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.RoleName;
 import edu.hqh.real_estate_website.exception.AppException;
+import edu.hqh.real_estate_website.exception.WebException;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
 import edu.hqh.real_estate_website.repository.RoleRepository;
@@ -21,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -47,6 +52,16 @@ public class AuthenticationService {
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
 
+    public boolean introspect(String token)
+            throws JOSEException, ParseException {
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        Date expityTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        var verified = signedJWT.verify(verifier);
+        return verified && expityTime.after(new Date());
+    }
+
     public RegisterResponse register(RegisterRequest request) {
         if(userRepository.existsByName(request.getName()))
             throw new AppException(ErrorCode.ITEM_EXISTS);
@@ -61,13 +76,19 @@ public class AuthenticationService {
         return registerMapper.toResponse(userRepository.save(user));
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request, boolean web) {
         var user = userRepository.findByName(request.getName()).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
         boolean authenticated = passwordEncoder
                 .matches(request.getPass(), user.getPassword());
-        if(!authenticated)
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generateToken(user);
+
+        if(!authenticated || token == null) {
+            if(web)
+                throw new WebException(ErrorCode.INCORRECTPASSWORD);
+            else
+                throw new AppException(ErrorCode.INCORRECTPASSWORD);
+        }
+
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
@@ -76,6 +97,7 @@ public class AuthenticationService {
 
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
 
         JWTClaimsSet jwtClaimsSet =
                 new JWTClaimsSet.Builder()
@@ -93,8 +115,8 @@ public class AuthenticationService {
         try {
             jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
             return jwsObject.serialize();
-        } catch (JOSEException e) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        } catch (Exception e) {
+            return null;
         }
     }
 

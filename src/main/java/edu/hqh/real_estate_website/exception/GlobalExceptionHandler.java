@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @ControllerAdvice
@@ -28,5 +29,14 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.<ErrorCode>builder()
                         .result(errorCode)
                         .build());
+    }
+
+    @ExceptionHandler(value = WebException.class)
+    public ModelAndView handlingWebException(WebException exception) {
+        ErrorCode errorCode = exception.getErrorCode();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Error");
+        modelAndView.addObject("errorCode", errorCode);
+        return modelAndView;
     }
 }
