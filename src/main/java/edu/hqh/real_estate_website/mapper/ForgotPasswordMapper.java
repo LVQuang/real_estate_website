@@ -11,5 +11,7 @@ public interface ForgotPasswordMapper {
 //    User convertEntity(ForgotPasswordRequest request);
     ForgotPasswordResponse toResponse(User user);
 
-    ForgotPasswordRequest toAuthenticationRequest(UserForgotPasswordRequest request);
+    ForgotPasswordRequest toForgotPasswordRequest(UserForgotPasswordRequest request);
+
+    ForgotPasswordRequest toResetPasswordRequest(UserResetPasswordRequest request);
 }

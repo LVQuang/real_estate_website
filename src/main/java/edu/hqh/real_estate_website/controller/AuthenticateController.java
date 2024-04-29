@@ -3,6 +3,7 @@ package edu.hqh.real_estate_website.controller;
 import edu.hqh.real_estate_website.dto.request.UserForgotPasswordRequest;
 import edu.hqh.real_estate_website.dto.request.UserLoginRequest;
 import edu.hqh.real_estate_website.dto.request.UserRegisterRequest;
+import edu.hqh.real_estate_website.dto.request.UserResetPasswordRequest;
 import edu.hqh.real_estate_website.mapper.AuthenticationMapper;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class AuthenticateController {
     private final UserRepository userRepository;
-
     AuthenticationService authenticationService;
     AuthenticationMapper authenticationMapper;
     ForgotPasswordMapper forgotPasswordMapper;
@@ -49,7 +49,7 @@ public class AuthenticateController {
         var authentication = authenticationService.authenticate(authRequest, true);
         log.info(String.valueOf(authentication.isAuthenticated()));
         if(!authentication.isAuthenticated())
-            return "redirect:/login?incorrect";
+            return "redirect:/auth/login?incorrect";
         else
         {
             httpRequest.getSession().setAttribute("myToken", authentication.getToken());
@@ -58,27 +58,37 @@ public class AuthenticateController {
     }
 
     @GetMapping("/ForgotPassword")
-    String forgot(Model model){
+    String getForgot(Model model){
         UserForgotPasswordRequest user = new UserForgotPasswordRequest();
         model.addAttribute("user", user);
         return "forgotPassword";
     }
 
     @PostMapping("/ForgotPassword")
-    String testForgot(@Valid @ModelAttribute("user") UserForgotPasswordRequest user
-            ,HttpServletRequest httpRequest){
-        var authRequest = forgotPasswordMapper.toAuthenticationRequest(user);
-        var authentication = authenticationService.forgotPassword(authRequest);
-        httpRequest.getSession().setAttribute("email", authentication.getEmail());
-        return "redirect:/ForgotPassword";
+    String postForgot(@Valid @ModelAttribute("user") UserForgotPasswordRequest user){
+        var authRequest = forgotPasswordMapper.toForgotPasswordRequest(user);
+        if (!userRepository.existsByEmail(user.getEmail()))
+            return "redirect:/auth/ForgotPassword?email_not_exists";
+        authenticationService.forgotPassword(authRequest);
+        return "redirect:/auth/ForgotPassword?check_email";
     }
 
     @GetMapping("/ResetPassword")
-    String reset(Model model){
-        UserForgotPasswordRequest user = new UserForgotPasswordRequest();
+    String getReset(Model model){
+        UserResetPasswordRequest user = new UserResetPasswordRequest();
         model.addAttribute("user", user);
         return "resetPassword";
     }
+
+    @PostMapping("/ResetPassword")
+    String postReset(@Valid @ModelAttribute("user") UserResetPasswordRequest user){
+        var authRequest = forgotPasswordMapper.toResetPasswordRequest(user);
+        if (!userRepository.existsByEmail(user.getEmail()))
+            return "redirect:/auth/ResetPassword?email_not_exist";
+        authenticationService.resetPassword(authRequest);
+        return "redirect:/auth/login?resetPass_success";
+    }
+
     @GetMapping("/register")
     String getRegister(Model model) {
         UserRegisterRequest user = new UserRegisterRequest();

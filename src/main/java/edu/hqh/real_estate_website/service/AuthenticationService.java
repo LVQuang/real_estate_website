@@ -16,6 +16,7 @@ import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.RoleName;
 import edu.hqh.real_estate_website.enums.UserGender;
 import edu.hqh.real_estate_website.exception.AppException;
+import edu.hqh.real_estate_website.exception.WebException;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
 import edu.hqh.real_estate_website.repository.RoleRepository;
@@ -144,9 +145,9 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 
-        String resetLink = "http://localhost:8080/ResetPassword";
+        String resetLink = "http://localhost:8080/auth/ResetPassword";
         SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setFrom("hungnguyen1372003@gmail.com");// input the senders email ID
+        msg.setFrom("hungnguyen1372003@gmail.com");
         msg.setTo(user.getEmail());
 
         msg.setSubject("Welcome To Our Website");
@@ -166,11 +167,12 @@ public class AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new AppException(ErrorCode.DUPLICATE_PASSWORD);
+            return null;
         }
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
+        log.info(user.getEmail());
         return forgotPasswordMapper.toResponse(userRepository.save(user));
     }
 }

@@ -1,7 +1,5 @@
 package edu.hqh.real_estate_website.dto.request;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,7 +9,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class UserForgotPasswordRequest {
+public class UserResetPasswordRequest {
     @NonNull
     String email;
+    @NonNull
+    String password;
+    @NonNull
+    String re_password;
 }
