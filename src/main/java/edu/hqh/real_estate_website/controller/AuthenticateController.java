@@ -72,4 +72,9 @@ public class AuthenticateController {
         authenticationService.register(request);
         return "redirect:/auth/login?register_success";
     }
+
+    @GetMapping("/test")
+    String test() {
+        return "index";
+    }
 }
