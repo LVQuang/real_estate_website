@@ -8,12 +8,10 @@ import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.RoleName;
 import edu.hqh.real_estate_website.exception.AppException;
-import edu.hqh.real_estate_website.repository.RoleRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -25,12 +23,10 @@ import java.util.stream.Collectors;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-@Slf4j
 @Service
 public class PaymentService {
 
     UserRepository userRepository;
-    RoleRepository roleRepository;
 
     public String getPay(User user) throws UnsupportedEncodingException {
 
@@ -102,21 +98,16 @@ public class PaymentService {
     public PaymentResponse payment(PaymentRequest request) throws UnsupportedEncodingException {
         var user = userRepository.findByName(request.getName()).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 
-        // Lấy danh sách các vai trò của người dùng
         Set<Role> userRoles = user.getRoles();
-
-        // Lặp qua từng vai trò và lấy tên của chúng
         List<String> roleNames = userRoles.stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
 
-        // Kiểm tra xem vai trò USER có trong danh sách không
         if (!roleNames.contains(RoleName.USER.getName())) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
         var VNPayURL = getPay(user);
-
         return PaymentResponse.builder()
                 .url(VNPayURL)
                 .build();
