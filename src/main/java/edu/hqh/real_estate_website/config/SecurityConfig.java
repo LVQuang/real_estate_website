@@ -36,8 +36,13 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request
+
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .anyRequest().authenticated())
+                                .requestMatchers("/view/auth/**").permitAll()
+//                                 .anyRequest().authenticated()
+                                .anyRequest().permitAll())
+                .addFilterAt(new SessionFilter(), BearerTokenAuthenticationFilter.class)
+
                 .oauth2ResourceServer(oauth2 ->
                         oauth2
                                 .bearerTokenResolver(this::tokenExtractor)

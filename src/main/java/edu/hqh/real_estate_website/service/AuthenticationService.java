@@ -6,13 +6,16 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import edu.hqh.real_estate_website.dto.request.AuthenticationRequest;
+import edu.hqh.real_estate_website.dto.request.ForgotPasswordRequest;
 import edu.hqh.real_estate_website.dto.request.RegisterRequest;
 import edu.hqh.real_estate_website.dto.response.AuthenticationResponse;
+import edu.hqh.real_estate_website.dto.response.ForgotPasswordResponse;
 import edu.hqh.real_estate_website.dto.response.RegisterResponse;
 import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.RoleName;
 import edu.hqh.real_estate_website.exception.AppException;
+import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
 import edu.hqh.real_estate_website.repository.RoleRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
@@ -22,6 +25,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -42,6 +47,7 @@ public class AuthenticationService {
     RoleRepository roleRepository;
     RegisterMapper registerMapper;
     PasswordEncoder passwordEncoder;
+    ForgotPasswordMapper forgotPasswordMapper;
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -119,5 +125,22 @@ public class AuthenticationService {
                 }
             });
         return stringJoiner.toString();
+    }
+
+    public ForgotPasswordResponse resetPassword(ForgotPasswordRequest request) {
+
+        if(!userRepository.existsByEmail(request.getEmail()))
+            throw new AppException(ErrorCode.ITEM_DONT_EXISTS);
+
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.OTHER_EXCEPTION);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        return forgotPasswordMapper.toResponse(userRepository.save(user));
     }
 }
