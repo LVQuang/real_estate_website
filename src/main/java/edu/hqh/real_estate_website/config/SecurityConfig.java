@@ -38,6 +38,7 @@ public class SecurityConfig {
                         request
 
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
                                 .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2
