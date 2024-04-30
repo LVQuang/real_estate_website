@@ -21,7 +21,7 @@ public class ContactController {
     ContactService contactService;
 
     @GetMapping("/{pageNumber}")
-    String getPost(Model model,
+    String getContact(Model model,
                    @RequestParam(name = "page",
                            required = false, defaultValue = "1") Integer pageNumber
     )
@@ -33,10 +33,10 @@ public class ContactController {
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", result.getTotalPages());
         if(result.getTotalPages() == 0) {
-            return "index";
+            return "/layout/contacts";
         }
         if(result.getTotalPages() <= pageNumber)
-            return "redirect:/post/1?outPage";
-        return "index";
+            return "redirect:/contact/1?outPage";
+        return "/layout/contacts";
     }
 }
