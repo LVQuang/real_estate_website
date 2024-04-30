@@ -6,7 +6,6 @@ import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
 import edu.hqh.real_estate_website.enums.ErrorCode;
-import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.exception.WebException;
 import edu.hqh.real_estate_website.repository.InvalidatedTokenRepository;
 import lombok.extern.slf4j.Slf4j;

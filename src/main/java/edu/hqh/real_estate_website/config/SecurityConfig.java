@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,9 +20,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
-import edu.hqh.real_estate_website.config.CustomJwtDecoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -42,7 +39,7 @@ public class SecurityConfig{
     private CustomJwtDecoder customJwtDecoder;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        List<RequestMatcher> requestMatchers = new ArrayList<RequestMatcher>();
+        List<RequestMatcher> requestMatchers = new ArrayList<>();
         requestMatchers.add(new AntPathRequestMatcher("/api/auth/**"));
         requestMatchers.add(new AntPathRequestMatcher("/auth/**"));
         return http
@@ -59,8 +56,8 @@ public class SecurityConfig{
                 )
                 .authorizeHttpRequests(request ->
                         request
-                                .requestMatchers(new OrRequestMatcher(requestMatchers)).permitAll()
-                                .anyRequest().authenticated())
+//                                .requestMatchers(new OrRequestMatcher(requestMatchers)).permitAll()
+                                .anyRequest().permitAll())
                 .build();
     }
 
