@@ -9,27 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-@RequestMapping("/post")
+@RequestMapping("/transaction")
 @Controller
-public class PostController {
-
-    @GetMapping("/addPost")
-    String getAddPost()
+public class TransactionController {
+    @GetMapping("/addTransaction")
+    String getAddTransaction()
     {
-        return "post/addPost";
+        return "transaction/addTransaction";
     }
-
-    @GetMapping("/addImages")
-    String getAddImages()
-    {
-        return "post/addImages";
-    }
-
-    @GetMapping("/postDetail")
-    String getPostDetail()
-    {
-        return "post/postDetail";
-    }
-
-
 }

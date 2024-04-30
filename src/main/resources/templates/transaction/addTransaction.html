@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace = "~{fragments/header :: header}">
+<body>
+<section class="d-flex align-items-center justify-content-center my-5">
+
+        <div style = "
+                        width: 60vw;
+                        height: 70vh;
+                    " class="shadow-lg rounded align-items-center justify-content-center flex-row-reverse">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-8 col-xl-6">
+                    <div class="card border-top border-bottom border-3" style="border-color: #f37a27 !important;">
+                        <div class="card-body p-5">
+
+                            <p class="lead fw-bold mb-5" style="color: #f37a27;">Transaction Receipt</p>
+
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <p class="small text-muted mb-1">Transaction Date</p>
+                                    <p>...</p>
+                                </div>
+                                <div class="col mb-3">
+                                    <p class="small text-muted mb-1">Sender</p>
+                                    <p>...</p>
+                                </div>
+                            </div>
+
+                            <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2;">
+                                <div class="row">
+                                    <div class="col-md-8 col-lg-8">
+                                        <p>VNPAY</p>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 text-center">
+                                        <p>10000 VND</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row my-4">
+                                <div class="col-md-4 offset-md-8 col-lg-5 offset-lg-9">
+                                    <p class="lead fw-bold mb-0" style="color: #f37a27;">10000 VND</p>
+                                </div>
+                            </div>
+
+
+                            <p class="mt-4 pt-2 mb-0">Do you have any problem? <a href="" style="color: #f37a27;">Please contact
+                                us</a>
+                            </p>
+
+                            <div class="d-grid justify-content-center my-3">
+                                <button id="submit" type="submit" class="btn btn-outline-success btn-lg">OK</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</section>
+
+</body>
+</html>
