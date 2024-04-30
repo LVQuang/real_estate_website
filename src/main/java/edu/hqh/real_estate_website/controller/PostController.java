@@ -1,15 +1,7 @@
 package edu.hqh.real_estate_website.controller;
 
 import edu.hqh.real_estate_website.dto.request.*;
-import edu.hqh.real_estate_website.mapper.AuthenticationMapper;
-import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
-import edu.hqh.real_estate_website.mapper.RegisterMapper;
-import edu.hqh.real_estate_website.repository.UserRepository;
-import edu.hqh.real_estate_website.service.AuthenticationService;
 import edu.hqh.real_estate_website.service.PostService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import edu.hqh.real_estate_website.dto.request.UserLoginRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,9 +10,6 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -30,13 +19,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/post")
 @Controller
 public class PostController {
+    PostService postService;
 
-    @GetMapping
-    String getLogin(Model model, @ModelAttribute("page") PageNavRequest page)
+    @GetMapping("/{pageNumber}")
+    String getPost(Model model,
+                   @RequestParam(name = "page",
+                           required = false, defaultValue = "1") Integer pageNumber
+    )
     {
-        log.info(page.getSearchKey());
-        page = new PageNavRequest();
-        model.addAttribute("page", page);
+        if (pageNumber == null)
+            pageNumber = 1;
+        var result = postService.getAllPostsPage(pageNumber);
+        var posts = result.getContent();
+        log.info(String.valueOf(result.getTotalPages()));
+        log.info(String.valueOf(pageNumber));
+        if(result.getTotalPages() <= pageNumber)
+            return "redirect:/post/1?outPage";
+        model.addAttribute("posts", posts);
         return "index";
     }
 

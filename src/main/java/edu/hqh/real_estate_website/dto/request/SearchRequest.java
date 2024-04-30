@@ -9,8 +9,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PageNavRequest {
-    Integer page;
-    String type;
+public class SearchRequest {
     String searchKey;
 }

@@ -55,7 +55,7 @@ public class AuthenticateController {
         else
         {
             httpRequest.getSession().setAttribute("myToken", authentication.getToken());
-            return "redirect:/post";
+            return "redirect:/post/1";
         }
     }
 
