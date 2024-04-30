@@ -91,7 +91,6 @@ public class PostService {
 
     public Page<Post> getAllPostsPage(int page) {
         Pageable pageable = PageRequest.of(page, 4);
-
         return postRepository.findAll(pageable);
     }
 }
