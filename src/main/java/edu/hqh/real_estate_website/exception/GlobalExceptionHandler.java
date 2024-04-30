@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     public ModelAndView handlingWebException(WebException exception) {
         ErrorCode errorCode = exception.getErrorCode();
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("Error");
+        modelAndView.setViewName("error/Error");
         modelAndView.addObject("errorCode", errorCode);
         return modelAndView;
     }

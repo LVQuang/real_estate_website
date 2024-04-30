@@ -3,7 +3,6 @@ package edu.hqh.real_estate_website.controller;
 import edu.hqh.real_estate_website.dto.request.UserForgotPasswordRequest;
 import edu.hqh.real_estate_website.dto.request.UserLoginRequest;
 import edu.hqh.real_estate_website.dto.request.UserRegisterRequest;
-import edu.hqh.real_estate_website.enums.UserGender;
 import edu.hqh.real_estate_website.mapper.AuthenticationMapper;
 import edu.hqh.real_estate_website.dto.request.UserResetPasswordRequest;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
@@ -41,8 +40,9 @@ public class AuthenticateController {
     {
         UserLoginRequest user = new UserLoginRequest();
         model.addAttribute("user", user);
-        return "login";
+        return "user/login";
     }
+
     @PostMapping("/login")
     String postLogin(@Valid @ModelAttribute("user") UserLoginRequest user
             , HttpServletRequest httpRequest)
@@ -55,8 +55,30 @@ public class AuthenticateController {
         else
         {
             httpRequest.getSession().setAttribute("myToken", authentication.getToken());
-            return "index";
+            return "redirect:/auth/test";
         }
+    }
+
+    @GetMapping("/register")
+    String getRegister(Model model) {
+        UserRegisterRequest user = new UserRegisterRequest();
+        model.addAttribute("user", user);
+        return "user/register";
+    }
+
+    @PostMapping("/register")
+    String postRegister(@Valid @ModelAttribute("user") UserRegisterRequest user)
+    {
+        var request = registerMapper.toRegisterRequest(user);
+        if(userRepository.existsByName(user.getName()))
+            return "redirect:/auth/register?user_exists_name";
+        authenticationService.register(request);
+        return "redirect:/auth/login?register_success";
+    }
+
+    @GetMapping("/test")
+    String test() {
+        return "index";
     }
 
     @GetMapping("/ForgotPassword")
@@ -89,27 +111,5 @@ public class AuthenticateController {
             return "redirect:/auth/ResetPassword?email_not_exist";
         authenticationService.resetPassword(authRequest);
         return "redirect:/auth/login?resetPass_success";
-    }
-
-    @GetMapping("/register")
-    String getRegister(Model model) {
-        UserRegisterRequest user = new UserRegisterRequest();
-        model.addAttribute("user", user);
-        return "register";
-    }
-
-    @PostMapping("/register")
-    String postRegister(@Valid @ModelAttribute("user") UserRegisterRequest user)
-    {
-        var request = registerMapper.toRegisterRequest(user);
-        if(userRepository.existsByName(user.getName()))
-            return "redirect:/auth/register?user_exists_name";
-        authenticationService.register(request);
-        return "redirect:/auth/login?register_success";
-    }
-
-    @GetMapping("/test")
-    String test() {
-        return "index";
     }
 }
