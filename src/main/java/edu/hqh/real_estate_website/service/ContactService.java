@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -79,5 +80,18 @@ public class ContactService {
     public Page<Contact> getAllContactsPage(int page) {
         Pageable pageable = PageRequest.of(page, 10);
         return contactRepository.findAll(pageable);
+    }
+
+    public Page<Contact> getAllContactsUserPage(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        var sender = SecurityContextHolder.getContext().getAuthentication().getName();
+        var result = contactRepository.findBySender(sender);
+
+        int start =(int) pageable.getOffset();
+        int end = Math.min( (start + pageable.getPageSize()) , result.size());
+
+        var content = result.subList(start, end);
+        return new PageImpl<>(content, pageable, result.size());
     }
 }
