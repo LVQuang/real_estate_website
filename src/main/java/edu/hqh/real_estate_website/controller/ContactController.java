@@ -29,8 +29,8 @@ public class ContactController {
         if (pageNumber == null)
             pageNumber = 1;
         var result = contactService.getAllContactsPage(pageNumber);
-        var posts = result.getContent();
-        model.addAttribute("posts", posts);
+        var contacts = result.getContent();
+        model.addAttribute("contacts", contacts);
         model.addAttribute("totalPages", result.getTotalPages());
         if(result.getTotalPages() == 0) {
             return "/layout/contacts";
