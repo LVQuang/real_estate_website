@@ -39,8 +39,20 @@ public class AuthenticateController {
     RegisterMapper registerMapper;
 
     @GetMapping("/login")
-    String getLogin(Model model)
-    {
+    String getLogin(Model model, HttpServletRequest request)
+            throws ParseException, JOSEException {
+        HttpSession session = request.getSession();
+        String token =(String) session.getAttribute("myToken");
+
+        if(token != null) {
+            authenticationService
+                    .logout(LogoutRequest.builder()
+                            .token(token)
+                            .build());
+        }
+
+        log.info(token);
+
         UserLoginRequest user = new UserLoginRequest();
         model.addAttribute("user", user);
         return "user/login";
@@ -52,7 +64,8 @@ public class AuthenticateController {
     {
         var authRequest = authenticationMapper.toAuthenticationRequest(user);
         var authentication = authenticationService.authenticate(authRequest, true);
-        log.info(String.valueOf(authentication.isAuthenticated()));
+
+
         if(!authentication.isAuthenticated())
             return "redirect:/auth/login?incorrect";
         else
@@ -66,17 +79,15 @@ public class AuthenticateController {
     String getLogout(HttpServletRequest request) throws ParseException, JOSEException {
         HttpSession session = request.getSession();
         String token =(String) session.getAttribute("myToken");
-        var logout = LogoutRequest.builder()
-                .token(token)
-                .build();
-        if (authenticationService.logout(logout)) {
-            log.info("Logout success");
-            return "redirect:/auth/login";
-        }
-        else {
-            log.info("Logout fail");
-            throw new WebException(ErrorCode.INVALIDATEDTOKEN);
-        }
+
+        var refresh = authenticationService
+                .refreshToken(RefreshRequest.builder()
+                        .token(token)
+                        .build());
+
+        session.setAttribute("myToken", refresh.getToken());
+
+        return "redirect:/auth/login";
     }
 
     @GetMapping("/register")

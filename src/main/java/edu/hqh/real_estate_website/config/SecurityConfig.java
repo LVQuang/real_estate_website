@@ -38,6 +38,8 @@ public class SecurityConfig{
     @Value("${jwt.signerKey}")
     private String signerKey;
 
+    @Autowired
+    private CustomJwtDecoder customJwtDecoder;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         List<RequestMatcher> requestMatchers = new ArrayList<RequestMatcher>();
@@ -51,7 +53,7 @@ public class SecurityConfig{
                                 .bearerTokenResolver(this::tokenExtractor)
                                 .jwt(jwtConfigurer ->
                                         jwtConfigurer
-                                                .decoder(jwtDecoder())
+                                                .decoder(customJwtDecoder)
                                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 )

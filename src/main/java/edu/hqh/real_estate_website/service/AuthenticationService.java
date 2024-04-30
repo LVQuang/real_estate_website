@@ -5,10 +5,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import edu.hqh.real_estate_website.dto.request.AuthenticationRequest;
-import edu.hqh.real_estate_website.dto.request.ForgotPasswordRequest;
-import edu.hqh.real_estate_website.dto.request.LogoutRequest;
-import edu.hqh.real_estate_website.dto.request.RegisterRequest;
+import edu.hqh.real_estate_website.dto.request.*;
 import edu.hqh.real_estate_website.dto.response.AuthenticationResponse;
 import edu.hqh.real_estate_website.dto.response.ForgotPasswordResponse;
 import edu.hqh.real_estate_website.dto.response.RegisterResponse;
@@ -18,6 +15,7 @@ import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.RoleName;
 import edu.hqh.real_estate_website.enums.UserGender;
 import edu.hqh.real_estate_website.exception.AppException;
+import edu.hqh.real_estate_website.exception.WebException;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
 import edu.hqh.real_estate_website.repository.InvalidatedTokenRepository;
@@ -135,6 +133,34 @@ public class AuthenticationService {
         }
     }
 
+    public AuthenticationResponse refreshToken (RefreshRequest request)
+            throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken());
+
+        var jid = signedJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        var invalidatedToken =
+                InvalidatedToken.builder()
+                        .id(jid)
+                        .expiryTime(expiryTime)
+                        .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signedJWT.getJWTClaimsSet().getSubject();
+
+        var user = userRepository.findByName(username).orElseThrow(()
+                -> new WebException(ErrorCode.INVALIDATEDTOKEN));
+
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
+    }
+
     public boolean logout(LogoutRequest request)
             throws ParseException, JOSEException {
         var signedToken = verifyToken(request.getToken());
@@ -150,6 +176,7 @@ public class AuthenticationService {
                         .id(jid)
                         .expiryTime(expiryTime)
                         .build();
+
         invalidatedTokenRepository.save(invalidatedToken);
 
         log.info("Invalidated id: " + invalidatedToken.getId());
