@@ -4,11 +4,13 @@ import edu.hqh.real_estate_website.dto.request.PostRequest;
 import edu.hqh.real_estate_website.dto.response.ApiResponse;
 import edu.hqh.real_estate_website.dto.response.PostDetailResponse;
 import edu.hqh.real_estate_website.dto.response.PostListingResponse;
+import edu.hqh.real_estate_website.entity.Post;
 import edu.hqh.real_estate_website.service.PostService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,6 +57,13 @@ public class PostAPI {
     ApiResponse<PostDetailResponse> update(@RequestBody PostRequest request, @PathVariable String post) {
         return ApiResponse.<PostDetailResponse>builder()
                 .result(postService.update(request, post))
+                .build();
+    }
+
+    @GetMapping("/page/{page}")
+    ApiResponse<Page<Post>> getAllPostsPage(@PathVariable int page) {
+        return ApiResponse.<Page<Post>>builder()
+                .result(postService.getAllPostsPage(page))
                 .build();
     }
 }

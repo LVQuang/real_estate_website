@@ -1,6 +1,7 @@
 package edu.hqh.real_estate_website.entity;
 
 import edu.hqh.real_estate_website.enums.PostState;
+import edu.hqh.real_estate_website.enums.TypePost;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,7 +22,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String title;
-    String type;
+    TypePost type;
     String address;
     String description;
     Double price;
