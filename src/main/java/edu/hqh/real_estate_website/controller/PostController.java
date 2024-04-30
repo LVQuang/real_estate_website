@@ -31,9 +31,13 @@ public class PostController {
             pageNumber = 1;
         var result = postService.getAllPostsPage(pageNumber);
         var posts = result.getContent();
+        model.addAttribute("posts", posts);
+        model.addAttribute("totalPages", result.getTotalPages());
+        if(result.getTotalPages() == 0) {
+            return "index";
+        }
         if(result.getTotalPages() <= pageNumber)
             return "redirect:/post/1?outPage";
-        model.addAttribute("posts", posts);
         return "index";
     }
 
