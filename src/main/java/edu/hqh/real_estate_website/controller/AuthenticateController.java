@@ -85,7 +85,7 @@ public class AuthenticateController {
     String getForgot(Model model){
         UserForgotPasswordRequest user = new UserForgotPasswordRequest();
         model.addAttribute("user", user);
-        return "forgotPassword";
+        return "password/forgotPassword";
     }
 
     @PostMapping("/ForgotPassword")
@@ -101,7 +101,7 @@ public class AuthenticateController {
     String getReset(Model model){
         UserResetPasswordRequest user = new UserResetPasswordRequest();
         model.addAttribute("user", user);
-        return "resetPassword";
+        return "password/resetPassword";
     }
 
     @PostMapping("/ResetPassword")
