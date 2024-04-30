@@ -13,22 +13,25 @@
            name="username"
            th:field="*{searchKey}"
            required >
-    <button  class="btn btn-outline-success btn-lg btn-block"
-             type="submit"
-             name="login">
-        <i class="fa-solid fa-magnifying-glass"></i>
+    <button th:replace = "~{fragments/button :: bigBtn}">
     </button>
 </form>
-<form class="form-inline d-flex align-items-center justify-content-center flex-row"
-      th:fragment = "search_test"
+<form th:fragment = "search_test"
       th:action="@{/post}"
-      th:object="${page}" >
-    <div class="form-group mx-sm-3 w-50">
-        <label for="inputPassword2" class="sr-only">Password</label>
-        <input type="text" class="form-control" id="inputPassword2"
-               placeholder="Find posts you want to read" th:field="*{searchKey}">
+      th:object="${page}"
+      class="d-flex align-items-center justify-content-center flex-row">
+    <div class="form-group">
+        <label for="email">Go Page: </label>
+        <input type="text"
+               class="form-control-sm"
+               id="email" placeholder="Page"
+               th:field="*{searchKey}"
+               name="email">
+        <div class="badge bg-success text-wrap mx-2"
+             style="width: 3rem;">
+            /100
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary mb-2">
-        <i class="fa-solid fa-magnifying-glass"></i>
+    <button th:replace = "~{fragments/button :: smallBtn}">
     </button>
 </form>
