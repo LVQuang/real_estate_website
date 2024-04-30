@@ -12,13 +12,11 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ApiResponse<ErrorCode>> handlingOtherException(Exception exception) {
-        log.error("Exception: ", exception);
-        return ResponseEntity
-                .badRequest()
-                .body(ApiResponse.<ErrorCode>builder()
-                        .result(ErrorCode.OTHER_EXCEPTION)
-                        .build());
+    public ModelAndView handlingOtherException(Exception exception) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("error/otherException");
+        modelAndView.addObject("message", exception.getMessage());
+        return modelAndView;
     }
 
     @ExceptionHandler(value = AppException.class)
@@ -35,7 +33,7 @@ public class GlobalExceptionHandler {
     public ModelAndView handlingWebException(WebException exception) {
         ErrorCode errorCode = exception.getErrorCode();
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("error/Error");
+        modelAndView.setViewName("error/exception");
         modelAndView.addObject("errorCode", errorCode);
         return modelAndView;
     }
