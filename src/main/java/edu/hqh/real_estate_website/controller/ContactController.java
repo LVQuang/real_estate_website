@@ -53,10 +53,10 @@ public class ContactController {
         model.addAttribute("contacts", contacts);
         model.addAttribute("totalPages", result.getTotalPages());
         if(result.getTotalPages() == 0) {
-            return "/layout/contacts";
+            return "/layout/userContacts";
         }
         if(result.getTotalPages() <= pageNumber)
             return "redirect:/contact/user/1?outPage";
-        return "/layout/contacts";
+        return "layout/userContacts";
     }
 }
