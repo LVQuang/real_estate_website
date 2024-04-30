@@ -1,7 +1,6 @@
 package edu.hqh.real_estate_website.controller;
 
 import edu.hqh.real_estate_website.service.ContactService;
-import edu.hqh.real_estate_website.service.PostService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,12 +30,32 @@ public class ContactController {
         var result = contactService.getAllContactsPage(pageNumber);
         var contacts = result.getContent();
         model.addAttribute("contacts", contacts);
-        model.addAttribute("totalPages", result.getTotalPages());
+        model.addAttribute("totalPages", result.getTotalPages() - 1);
         if(result.getTotalPages() == 0) {
             return "/layout/contacts";
         }
         if(result.getTotalPages() <= pageNumber)
             return "redirect:/contact/1?outPage";
         return "/layout/contacts";
+    }
+
+    @GetMapping("/user/{pageNumber}")
+    String getMyContact(Model model,
+                      @RequestParam(name = "page",
+                              required = false, defaultValue = "1") Integer pageNumber
+    )
+    {
+        if (pageNumber == null)
+            pageNumber = 1;
+        var result = contactService.getAllContactsUserPage(pageNumber);
+        var contacts = result.getContent();
+        model.addAttribute("contacts", contacts);
+        model.addAttribute("totalPages", result.getTotalPages() - 1);
+        if(result.getTotalPages() == 0) {
+            return "/layout/userContacts";
+        }
+        if(result.getTotalPages() <= pageNumber)
+            return "redirect:/contact/user/1?outPage";
+        return "layout/userContacts";
     }
 }
