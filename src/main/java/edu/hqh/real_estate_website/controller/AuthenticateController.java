@@ -49,6 +49,7 @@ public class AuthenticateController {
                     .logout(LogoutRequest.builder()
                             .token(token)
                             .build());
+            session.removeAttribute("myToken");
         }
 
         log.info(token);
