@@ -39,4 +39,24 @@ public class ContactController {
             return "redirect:/contact/1?outPage";
         return "/layout/contacts";
     }
+
+    @GetMapping("/user/{pageNumber}")
+    String getMyContact(Model model,
+                      @RequestParam(name = "page",
+                              required = false, defaultValue = "1") Integer pageNumber
+    )
+    {
+        if (pageNumber == null)
+            pageNumber = 1;
+        var result = contactService.getAllContactsPage(pageNumber);
+        var contacts = result.getContent();
+        model.addAttribute("contacts", contacts);
+        model.addAttribute("totalPages", result.getTotalPages());
+        if(result.getTotalPages() == 0) {
+            return "/layout/contacts";
+        }
+        if(result.getTotalPages() <= pageNumber)
+            return "redirect:/contact/user/1?outPage";
+        return "/layout/contacts";
+    }
 }
