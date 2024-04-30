@@ -26,7 +26,7 @@ public class PostController {
     @GetMapping("/addImages")
     String getAddImages()
     {
-        return "addImage";
+        return "addImages";
     }
 
     @GetMapping("/postDetail")
