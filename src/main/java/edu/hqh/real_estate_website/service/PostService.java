@@ -3,6 +3,7 @@ package edu.hqh.real_estate_website.service;
 import edu.hqh.real_estate_website.dto.request.PostRequest;
 import edu.hqh.real_estate_website.dto.response.PostDetailResponse;
 import edu.hqh.real_estate_website.dto.response.PostListingResponse;
+import edu.hqh.real_estate_website.entity.Post;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.PostState;
 import edu.hqh.real_estate_website.exception.AppException;
@@ -14,6 +15,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -83,5 +87,11 @@ public class PostService {
         postRepository.save(post);
 
         return postMapper.toResponse(post);
+    }
+
+    public Page<Post> getAllPostsPage(int page) {
+        Pageable pageable = PageRequest.of(page, 4);
+
+        return postRepository.findAll(pageable);
     }
 }

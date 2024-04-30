@@ -14,10 +14,8 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostListingResponse {
+    String id;
     String title;
-    String type;
     String address;
     Double price;
-    LocalDate postDate;
-    PostState available;
 }
