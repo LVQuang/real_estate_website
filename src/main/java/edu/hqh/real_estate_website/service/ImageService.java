@@ -2,6 +2,7 @@ package edu.hqh.real_estate_website.service;
 
 import edu.hqh.real_estate_website.entity.Image;
 import edu.hqh.real_estate_website.repository.ImageRepository;
+import edu.hqh.real_estate_website.repository.PostRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,8 +18,10 @@ import java.util.List;
 @Service
 public class ImageService {
     ImageRepository imageRepository;
+    PostRepository postRepository;
 
     public Image create(Image image) {
+        
         image.setImageDate(LocalDate.now());
         return imageRepository.save(image);
     }

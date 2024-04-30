@@ -31,8 +31,6 @@ public class PostController {
             pageNumber = 1;
         var result = postService.getAllPostsPage(pageNumber);
         var posts = result.getContent();
-        log.info(String.valueOf(result.getTotalPages()));
-        log.info(String.valueOf(pageNumber));
         if(result.getTotalPages() <= pageNumber)
             return "redirect:/post/1?outPage";
         model.addAttribute("posts", posts);
