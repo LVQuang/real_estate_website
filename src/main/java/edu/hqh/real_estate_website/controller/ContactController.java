@@ -28,40 +28,48 @@ public class ContactController {
     @GetMapping("/{pageNumber}")
     String getContact(Model model,
                    @RequestParam(name = "page",
-                           required = false, defaultValue = "1") Integer pageNumber
+                           required = false, defaultValue = "0") Integer pageNumber
     )
     {
-        if (pageNumber == null)
-            pageNumber = 1;
+
+        if (pageNumber != null && pageNumber > 0)
+            pageNumber-=1;
+        if(pageNumber == null)
+            pageNumber =0;
+
         var result = contactService.getAllContactsPage(pageNumber);
         var contacts = result.getContent();
         model.addAttribute("contacts", contacts);
-        model.addAttribute("totalPages", result.getTotalPages() - 1);
+        model.addAttribute("totalPages", result.getTotalPages());
         if(result.getTotalPages() == 0) {
             return "/layout/contacts";
         }
         if(result.getTotalPages() <= pageNumber)
-            return "redirect:/contact/1?outPage";
+            return "redirect:/contact/null?page=0&outPage=true";
         return "/layout/contacts";
     }
 
     @GetMapping("/user/{pageNumber}")
     String getMyContact(Model model,
                       @RequestParam(name = "page",
-                              required = false, defaultValue = "1") Integer pageNumber
+                              required = false, defaultValue = "0") Integer pageNumber
     )
     {
-        if (pageNumber == null)
-            pageNumber = 1;
+
+        if (pageNumber != null && pageNumber > 0)
+            pageNumber-=1;
+        if(pageNumber == null)
+            pageNumber =0;
+
         var result = contactService.getAllContactsUserPage(pageNumber);
         var contacts = result.getContent();
         model.addAttribute("contacts", contacts);
-        model.addAttribute("totalPages", result.getTotalPages() - 1);
+        model.addAttribute("totalPages", result.getTotalPages());
         if(result.getTotalPages() == 0) {
             return "/layout/userContacts";
         }
         if(result.getTotalPages() <= pageNumber)
-            return "redirect:/contact/user/1?outPage";
+            return "redirect:/contact/user/null?page=0&outPage=true";
         return "layout/userContacts";
     }
 

@@ -4,10 +4,12 @@ import edu.hqh.real_estate_website.dto.request.ContactRequest;
 import edu.hqh.real_estate_website.dto.response.ContactResponse;
 import edu.hqh.real_estate_website.entity.Contact;
 import edu.hqh.real_estate_website.entity.Post;
+import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.ContactMapper;
 import edu.hqh.real_estate_website.repository.ContactRepository;
+import edu.hqh.real_estate_website.repository.PostRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +31,22 @@ import java.util.List;
 @Service
 public class ContactService {
     ContactRepository contactRepository;
+    PostRepository postRepository;
     UserRepository userRepository;
     ContactMapper contactMapper;
+    UserService userService;
 
-    public ContactResponse create(ContactRequest request, String receiverId) {
+    public ContactResponse create(ContactRequest request, String postId) {
         var contact = contactMapper.convertEntity(request);
         var senderName = SecurityContextHolder.getContext().getAuthentication().getName();
         var sender = userRepository.findByName(senderName).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 
-        var receiver = userRepository.findById(receiverId).orElseThrow(()
+        var post = postRepository.findById(postId).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        var receiver = post.getUser();
+
+
         contact.setContactDate(LocalDate.now());
         contact.setSender(sender.getName());
         contact.setReceiver(receiver.getName());
@@ -78,15 +85,23 @@ public class ContactService {
     }
 
     public Page<Contact> getAllContactsPage(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        return contactRepository.findAll(pageable);
+        var result = contactRepository.findAll();
+        return getAllContactsPageImpl(page, result);
     }
 
     public Page<Contact> getAllContactsUserPage(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-
-        var sender = SecurityContextHolder.getContext().getAuthentication().getName();
+        var sender = userService.getCurrentUser().getName();
         var result = contactRepository.findBySender(sender);
+        return getAllContactsPageImpl(page, result);
+    }
+
+    private Page<Contact> getAllContactsPageImpl(int page, List<Contact> result) {
+        int pageSize = 10;
+
+        if(result.size() < pageSize)
+            pageSize = result.size() ;
+
+        Pageable pageable = PageRequest.of(page, pageSize);
 
         int start =(int) pageable.getOffset();
         int end = Math.min( (start + pageable.getPageSize()) , result.size());

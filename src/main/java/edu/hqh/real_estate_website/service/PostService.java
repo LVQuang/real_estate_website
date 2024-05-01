@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -104,8 +105,23 @@ public class PostService {
     }
 
     public Page<Post> getAllPostsPage(int page) {
-        Pageable pageable = PageRequest.of(page, 4);
-        return postRepository.findAll(pageable);
+        var result = postRepository.findAll();
+        return getAllPostsPageImpl(page, result);
+    }
+
+    private Page<Post> getAllPostsPageImpl(int page, List<Post> result) {
+        int pageSize = 4;
+
+        if(result.size() < pageSize)
+            pageSize = result.size() ;
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        int start =(int) pageable.getOffset();
+        int end = Math.min( (start + pageable.getPageSize()) , result.size());
+
+        var content = result.subList(start, end);
+        return new PageImpl<>(content, pageable, result.size());
     }
 
     public List<Image> getImagesByPostId(String postId) {

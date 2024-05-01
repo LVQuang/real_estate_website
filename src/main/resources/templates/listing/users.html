@@ -1,22 +1,23 @@
 <table th:fragment = "users" class="table">
-    <thead class="thead-light">
-    <tr>
-        <th scope="col">Sender</th>
-        <th scope="col">Receiver</th>
-        <th scope="col">Message</th>
-        <th scope="col">Date</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="contact : ${contacts}">
-        <td th:text="${contact.sender}"></td>
-        <td th:text="${contact.receiver}"></td>
-        <td th:text="${contact.message}"></td>
-        <td th:text="${contact.contactDate.toString()}"></td>
-        <td>
-            <button type="button" th:text="'Details'" th:attr="data-user-id=${contact.id}" class="btn btn-outline-success detail-btn"></button>
-        </td>
-
-    </tr>
-    </tbody>
+  <thead class="thead-light">
+  <tr>
+    <th scope="col">Name</th>
+    <th scope="col">Email</th>
+    <th scope="col">Phone</th>
+    <th scope="col">Gender</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${users}">
+    <td th:text="${user.name}"></td>
+    <td th:text="${user.email}"></td>
+    <td th:text="${user.phone}"></td>
+    <td th:text="${user.gender}"></td>
+    <td>
+        <div th:replace = "~{fragments/button :: smallBtnUserDetail}">
+        </div>
+    </td>
+  </tr>
+  </tbody>
 </table>

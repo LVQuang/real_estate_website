@@ -30,26 +30,29 @@ import java.util.List;
 public class PostController {
     PostService postService;
     PostMapper postMapper;
-
     ImageService imageService;
 
     @GetMapping("/{pageNumber}")
     String getPost(Model model,
                    @RequestParam(name = "page",
-                           required = false, defaultValue = "1") Integer pageNumber
+                           required = false, defaultValue = "0") Integer pageNumber
     )
     {
-        if (pageNumber == null)
-            pageNumber = 1;
+        if (pageNumber != null && pageNumber > 0)
+            pageNumber-=1;
+        if(pageNumber == null)
+            pageNumber =0;
+
         var result = postService.getAllPostsPage(pageNumber);
         var posts = result.getContent();
         model.addAttribute("posts", posts);
-        model.addAttribute("totalPages", result.getTotalPages());
+        model.addAttribute("totalPages",
+                result.getTotalPages());
         if(result.getTotalPages() == 0) {
             return "index";
         }
         if(result.getTotalPages() <= pageNumber)
-            return "redirect:/post/1?outPage";
+            return "redirect:/post/null?page=0&outPage=true";
         return "index";
     }
 
@@ -83,12 +86,9 @@ public class PostController {
     String postAddImages(@RequestParam("post_id") String postId,
                          @RequestParam("image") List<MultipartFile> files)  throws IOException, SQLException {
 
-        if (imageService.createListImage(files, postId)){
+        if (imageService.createListImage(files, postId))
             return "redirect:/post/1";
-        }
-
-        else
-            return "redirect:/post/1?outPage";
+        return "redirect:/post/1?outPage";
     }
 
 //    93f02514-d6dc-44fe-93e8-3d217dcc7749

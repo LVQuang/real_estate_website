@@ -28,11 +28,14 @@ public class TransactionController {
     @GetMapping("/{pageNumber}")
     String getTransaction(Model model,
                    @RequestParam(name = "page",
-                           required = false, defaultValue = "1") Integer pageNumber
+                           required = false, defaultValue = "0") Integer pageNumber
     )
     {
-        if (pageNumber == null)
-            pageNumber = 1;
+        if (pageNumber != null && pageNumber > 0)
+            pageNumber-=1;
+        if(pageNumber == null)
+            pageNumber =0;
+
         var result = transactionService.getAllContactsPage(pageNumber);
         var transactions = result.getContent();
         model.addAttribute("transactions", transactions);
@@ -41,27 +44,30 @@ public class TransactionController {
             return "/layout/transactions";
         }
         if(result.getTotalPages() <= pageNumber)
-            return "redirect:/transaction/1?outPage";
+            return "redirect:/transaction/null?page=0&outPage=true";
         return "/layout/transactions";
     }
 
     @GetMapping("/user/{pageNumber}")
     String getMyTransaction(Model model,
                       @RequestParam(name = "page",
-                              required = false, defaultValue = "1") Integer pageNumber
+                              required = false, defaultValue = "0") Integer pageNumber
     )
     {
-        if (pageNumber == null)
-            pageNumber = 1;
+        if (pageNumber != null && pageNumber > 0)
+            pageNumber-=1;
+        if(pageNumber == null)
+            pageNumber =0;
+
         var result = transactionService.getAllContactsUserPage(pageNumber);
         var transactions = result.getContent();
         model.addAttribute("transactions", transactions);
-        model.addAttribute("totalPages", result.getTotalPages() - 1);
+        model.addAttribute("totalPages", result.getTotalPages());
         if(result.getTotalPages() == 0) {
             return "/layout/userTransactions";
         }
         if(result.getTotalPages() <= pageNumber)
-            return "redirect:/transaction/user/1?outPage";
+            return "redirect:/transaction/user/null?page=0&outPage=true";
         return "layout/userTransactions";
     }
 }
