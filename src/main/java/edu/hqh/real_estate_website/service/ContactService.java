@@ -8,6 +8,7 @@ import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.ContactMapper;
 import edu.hqh.real_estate_website.repository.ContactRepository;
+import edu.hqh.real_estate_website.repository.PostRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +30,21 @@ import java.util.List;
 @Service
 public class ContactService {
     ContactRepository contactRepository;
+    PostRepository postRepository;
     UserRepository userRepository;
     ContactMapper contactMapper;
 
-    public ContactResponse create(ContactRequest request, String receiverId) {
+    public ContactResponse create(ContactRequest request, String postId) {
         var contact = contactMapper.convertEntity(request);
         var senderName = SecurityContextHolder.getContext().getAuthentication().getName();
         var sender = userRepository.findByName(senderName).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 
-        var receiver = userRepository.findById(receiverId).orElseThrow(()
+        var post = postRepository.findById(postId).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        var receiver = post.getUser();
+
+
         contact.setContactDate(LocalDate.now());
         contact.setSender(sender.getName());
         contact.setReceiver(receiver.getName());
