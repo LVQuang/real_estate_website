@@ -19,9 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -89,7 +87,7 @@ public class PostController {
     {
         UserAddPostRequest user = new UserAddPostRequest();
         model.addAttribute("user", user);
-        return "/addPost";
+        return "add/addPost";
     }
 
     @PostMapping("/addPost")
@@ -108,7 +106,7 @@ public class PostController {
     String getAddImages(Model model, @RequestParam("post_id") String postId )
     {
         model.addAttribute("post_id", postId);
-        return "/addImages";
+        return "add/addImages";
     }
 
     @PostMapping("/addImages")
@@ -119,7 +117,6 @@ public class PostController {
             return "redirect:/post/1";
         return "redirect:/post/1?outPage";
     }
-
 
     @GetMapping("/posts")
     String getPostList(Model model)
@@ -132,5 +129,10 @@ public class PostController {
     {
         return "layout/postDetail";
     }
-    
+
+    @GetMapping("/delete/{pageNumber}")
+    String deletePost(@PathVariable String pageNumber) {
+        postService.delete(pageNumber);
+        return "redirect:/post/myPost/null?page=0";
+    }
 }

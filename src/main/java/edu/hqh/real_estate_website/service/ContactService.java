@@ -36,16 +36,14 @@ public class ContactService {
     ContactMapper contactMapper;
     UserService userService;
 
-    public ContactResponse create(ContactRequest request, String postId) {
+    public ContactResponse create(ContactRequest request, String userId) {
         var contact = contactMapper.convertEntity(request);
         var senderName = SecurityContextHolder.getContext().getAuthentication().getName();
         var sender = userRepository.findByName(senderName).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 
-        var post = postRepository.findById(postId).orElseThrow(()
+        var receiver = userRepository.findById(userId).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
-        var receiver = post.getUser();
-
 
         contact.setContactDate(LocalDate.now());
         contact.setSender(sender.getName());
