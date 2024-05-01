@@ -22,8 +22,9 @@
         <label for="page">Go Page: </label>
         <input type="number"
                class="form-control-sm"
-               id="page" placeholder="Page"
-               name="page">
+               id="page" th:placeholder = "${currentPage}"
+               name="page"
+               th:value>
         <div class="badge bg-success text-wrap mx-2"
              style="width: 3rem;"
         th:text = "'/ ' + ${totalPages}">

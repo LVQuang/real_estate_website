@@ -1,7 +1,6 @@
 package edu.hqh.real_estate_website.controller;
 
 import edu.hqh.real_estate_website.dto.request.PaymentRequest;
-import edu.hqh.real_estate_website.dto.response.PaymentResponse;
 import edu.hqh.real_estate_website.service.PaymentService;
 import edu.hqh.real_estate_website.service.UserService;
 import lombok.AccessLevel;
@@ -9,11 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.UnsupportedEncodingException;
 

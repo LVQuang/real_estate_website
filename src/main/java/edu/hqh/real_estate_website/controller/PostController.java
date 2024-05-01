@@ -48,11 +48,36 @@ public class PostController {
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages",
                 result.getTotalPages());
+        model.addAttribute("currentPage", pageNumber + 1);
         if(result.getTotalPages() == 0) {
             return "index";
         }
         if(result.getTotalPages() <= pageNumber)
             return "redirect:/post/null?page=0&outPage=true";
+        return "index";
+    }
+
+    @GetMapping("/myPost/{pageNumber}")
+    String getMyPost(Model model,
+                   @RequestParam(name = "page",
+                           required = false, defaultValue = "0") Integer pageNumber
+    )
+    {
+        if (pageNumber != null && pageNumber > 0)
+            pageNumber-=1;
+        if(pageNumber == null)
+            pageNumber =0;
+
+        var result = postService.getAllMyPostPage(pageNumber);
+        var posts = result.getContent();
+        model.addAttribute("posts", posts);
+        model.addAttribute("totalPages",
+                result.getTotalPages());
+        if(result.getTotalPages() == 0) {
+            return "index";
+        }
+        if(result.getTotalPages() <= pageNumber)
+            return "redirect:/post/myPost/null?page=0&outPage=true";
         return "index";
     }
 
