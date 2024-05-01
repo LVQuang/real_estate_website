@@ -1,22 +1,22 @@
-<table th:fragment = "contacts" class="table">
-  <thead class="thead-light">
-      <tr>
+<table th:fragment = "users" class="table">
+    <thead class="thead-light">
+    <tr>
         <th scope="col">Sender</th>
         <th scope="col">Receiver</th>
         <th scope="col">Message</th>
         <th scope="col">Date</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr th:each="contact : ${contacts}">
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="contact : ${contacts}">
         <td th:text="${contact.sender}"></td>
         <td th:text="${contact.receiver}"></td>
         <td th:text="${contact.message}"></td>
         <td th:text="${contact.contactDate.toString()}"></td>
         <td>
-            <button type="button" th:text="'Details'" th:attr="data-contact-id=${contact.id}" class="btn btn-outline-success detail-btn"></button>
+            <button type="button" th:text="'Details'" th:attr="data-user-id=${contact.id}" class="btn btn-outline-success detail-btn"></button>
         </td>
 
-      </tr>
-  </tbody>
+    </tr>
+    </tbody>
 </table>

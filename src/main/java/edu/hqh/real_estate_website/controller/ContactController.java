@@ -58,4 +58,6 @@ public class ContactController {
             return "redirect:/contact/user/1?outPage";
         return "layout/userContacts";
     }
+
+
 }

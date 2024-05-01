@@ -13,6 +13,15 @@
     <td th:text="${transaction.receiver}"></td>
     <td th:text="${transaction.price}"></td>
     <td th:text="${transaction.transactionDate.toString()}"></td>
+    <td>
+      <button type="button"
+              th:text="'Details'"
+              th:attr="data-transaction-id=${transaction.id}"
+              class="btn btn-outline-success detail-btn"
+      >
+
+      </button>
+    </td>
   </tr>
   </tbody>
 </table>
