@@ -35,6 +35,8 @@ public class PostService {
     PostRepository postRepository;
     UserRepository userRepository;
     TransactionRepository transactionRepository;
+
+    UserService userService;
     PostMapper postMapper;
 
     public PostDetailResponse getById(String id) {
@@ -102,6 +104,12 @@ public class PostService {
 
     public Page<Post> getAllPostsPage(int page) {
         var result = postRepository.findAll();
+        return getAllPostsPageImpl(page, result);
+    }
+
+    public Page<Post> getAllMyPostPage(int page) {
+        var user = userService.getCurrentUser();
+        var result = postRepository.findByUser(user);
         return getAllPostsPageImpl(page, result);
     }
 
