@@ -50,7 +50,7 @@ public class ImageController {
 
     @GetMapping("/add")
     public ModelAndView addImage(){
-        return new ModelAndView("addImage");
+        return new ModelAndView("/addImages");
     }
 
     @PostMapping("/add")

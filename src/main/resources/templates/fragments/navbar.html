@@ -4,7 +4,7 @@
             <li class="nav-item active">
                 <a class="nav-link"
                    sec:authorize="isAuthenticated()"
-                   href="/post/1">Posts
+                   href="/post/null?page=0">Posts
                 </a>
             </li>
             <li class="nav-item">
@@ -16,21 +16,21 @@
             <li class="nav-item">
                 <a class="nav-link"
                    sec:authorize="isAuthenticated()"
-                   href="#">Find User
+                   href="/user/null?page=0">Find User
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link"
                    sec:authorize="hasRole('USER')"
-                   href="/transaction/user/1">My Transactions
+                   href="/transaction/user/null?page=0">My Transactions
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link"
                    sec:authorize="hasRole('USER')"
-                   href="/contact/user/1">My Contacts
+                   href="/contact/user/null?page=0">My Contacts
                 </a>
             </li>
 
@@ -44,14 +44,14 @@
             <li class="nav-item">
                 <a class="nav-link"
                    sec:authorize="hasRole('ADMIN')"
-                   href="/transaction/1">Transactions
+                   href="/transaction/null?page=0">Transactions
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link"
                    sec:authorize="hasRole('ADMIN')"
-                   href="/contact/1">Contacts
+                   href="/contact/null?page=0">Contacts
                 </a>
             </li>
             <li class="nav-item">

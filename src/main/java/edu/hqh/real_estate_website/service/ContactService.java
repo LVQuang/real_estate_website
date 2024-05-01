@@ -4,6 +4,7 @@ import edu.hqh.real_estate_website.dto.request.ContactRequest;
 import edu.hqh.real_estate_website.dto.response.ContactResponse;
 import edu.hqh.real_estate_website.entity.Contact;
 import edu.hqh.real_estate_website.entity.Post;
+import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.ContactMapper;
@@ -33,6 +34,7 @@ public class ContactService {
     PostRepository postRepository;
     UserRepository userRepository;
     ContactMapper contactMapper;
+    UserService userService;
 
     public ContactResponse create(ContactRequest request, String postId) {
         var contact = contactMapper.convertEntity(request);
@@ -83,15 +85,23 @@ public class ContactService {
     }
 
     public Page<Contact> getAllContactsPage(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        return contactRepository.findAll(pageable);
+        var result = contactRepository.findAll();
+        return getAllContactsPageImpl(page, result);
     }
 
     public Page<Contact> getAllContactsUserPage(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-
-        var sender = SecurityContextHolder.getContext().getAuthentication().getName();
+        var sender = userService.getCurrentUser().getName();
         var result = contactRepository.findBySender(sender);
+        return getAllContactsPageImpl(page, result);
+    }
+
+    private Page<Contact> getAllContactsPageImpl(int page, List<Contact> result) {
+        int pageSize = 10;
+
+        if(result.size() < pageSize)
+            pageSize = result.size() ;
+
+        Pageable pageable = PageRequest.of(page, pageSize);
 
         int start =(int) pageable.getOffset();
         int end = Math.min( (start + pageable.getPageSize()) , result.size());

@@ -2,6 +2,7 @@ package edu.hqh.real_estate_website.service;
 
 import edu.hqh.real_estate_website.dto.request.UserRequest;
 import edu.hqh.real_estate_website.dto.response.UserResponse;
+import edu.hqh.real_estate_website.entity.Transaction;
 import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
@@ -11,6 +12,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -69,9 +74,29 @@ public class UserService {
         return userMapper.toResponse(userRepository.save(user));
     }
 
-    private User getCurrentUser() {
+    public User getCurrentUser() {
         var name = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByName(name)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+    }
+
+    public Page<User> getAllUsersPage(int page) {
+        var result = userRepository.findAll();
+        return getAllUsersPageImpl(page , result);
+    }
+
+    private Page<User> getAllUsersPageImpl(int page, List<User> result) {
+        int pageSize = 10;
+
+        if(result.size() < pageSize)
+            pageSize = result.size() ;
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        int start =(int) pageable.getOffset();
+        int end = Math.min( (start + pageable.getPageSize()) , result.size());
+
+        var content = result.subList(start, end);
+        return new PageImpl<>(content, pageable, result.size());
     }
 }

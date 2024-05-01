@@ -2,8 +2,6 @@ package edu.hqh.real_estate_website.controller;
 
 import com.nimbusds.jose.JOSEException;
 import edu.hqh.real_estate_website.dto.request.*;
-import edu.hqh.real_estate_website.enums.ErrorCode;
-import edu.hqh.real_estate_website.exception.WebException;
 import edu.hqh.real_estate_website.mapper.AuthenticationMapper;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
@@ -32,7 +30,6 @@ import java.text.ParseException;
 @Controller
 public class AuthenticateController {
     private final UserRepository userRepository;
-
     AuthenticationService authenticationService;
     AuthenticationMapper authenticationMapper;
     ForgotPasswordMapper forgotPasswordMapper;
@@ -72,7 +69,7 @@ public class AuthenticateController {
         else
         {
             httpRequest.getSession().setAttribute("myToken", authentication.getToken());
-            return "redirect:/post/1";
+            return "redirect:/post/null?page=0";
         }
     }
 
