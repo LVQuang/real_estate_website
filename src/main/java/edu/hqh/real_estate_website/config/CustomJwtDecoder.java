@@ -36,8 +36,6 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
-
-        log.info("Dangerous");
         try {
             if(verifyToken(token) == null)
                 throw new WebException(ErrorCode.INVALIDATEDTOKEN);
