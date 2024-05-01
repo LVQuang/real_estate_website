@@ -3,7 +3,6 @@
   <tr>
     <th scope="col">Sender</th>
     <th scope="col">Receiver</th>
-    <th scope="col">Message</th>
     <th scope="col">Price</th>
     <th scope="col">Date</th>
   </tr>
@@ -12,7 +11,6 @@
   <tr th:each="transaction : ${transactions}">
     <td th:text="${transaction.sender}"></td>
     <td th:text="${transaction.receiver}"></td>
-    <td th:text="${transaction.message}"></td>
     <td th:text="${transaction.price}"></td>
     <td th:text="${transaction.transactionDate.toString()}"></td>
   </tr>
