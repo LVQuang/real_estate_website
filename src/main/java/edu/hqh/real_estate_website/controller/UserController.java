@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
     UserService userService;
 
+    @GetMapping("/myInfo")
+    String getMyInfo() {
+        return "/user/updateMyInfo";
+    }
     @GetMapping("/{pageNumber}")
     String getUsers(Model model,
                    @RequestParam(name = "page",
