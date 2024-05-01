@@ -1,9 +1,6 @@
 package edu.hqh.real_estate_website.controller;
 
 import edu.hqh.real_estate_website.dto.request.*;
-import edu.hqh.real_estate_website.dto.response.PostDetailResponse;
-import edu.hqh.real_estate_website.entity.Image;
-import edu.hqh.real_estate_website.entity.Post;
 import edu.hqh.real_estate_website.mapper.PostMapper;
 import edu.hqh.real_estate_website.service.ImageService;
 import edu.hqh.real_estate_website.service.PostService;
@@ -21,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -87,25 +83,15 @@ public class PostController {
     @PostMapping("/addImages")
     String postAddImages(@RequestParam("post_id") String postId,
                          @RequestParam("image") List<MultipartFile> files)  throws IOException, SQLException {
-        for (MultipartFile file : files) {
-            byte[] bytes = file.getBytes();
-            Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
 
-            Image image = new Image();
-            image.setContent(blob);
-            image.setImageDate(LocalDate.now());
-
-            PostDetailResponse postRep = postService.getById(postId);
-            postMapper.
-
-            Post post = new Post();
-            post.setId(postRep.getId());
-            image.setPost(post);
-
-            imageService.create(image);
+        if (imageService.createListImage(files, postId)){
+            return "redirect:/post/1";
         }
-        return "redirect:/post/postList";
+
+        else
+            return "redirect:/post/1?outPage";
     }
+
 
     @GetMapping("/posts")
     String getPostList(Model model)
