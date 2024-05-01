@@ -1,11 +1,10 @@
-<table th:fragment = "transactions" class="table">
+<table th:fragment = "users" class="table">
   <thead class="thead-light">
   <tr>
     <th scope="col">Name</th>
     <th scope="col">Email</th>
     <th scope="col">Phone</th>
     <th scope="col">Gender</th>
-    <th scope="col">Role</th>
     <th scope="col"></th>
   </tr>
   </thead>
@@ -15,7 +14,6 @@
     <td th:text="${user.email}"></td>
     <td th:text="${user.phone}"></td>
     <td th:text="${user.gender}"></td>
-    <td th:text="${user.role}"></td>
     <td>
         <div th:replace = "~{fragments/button :: smallBtnUserDetail}">
         </div>

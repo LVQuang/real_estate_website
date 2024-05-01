@@ -33,6 +33,7 @@ public class TransactionService {
     PostRepository postRepository;
     UserRepository userRepository;
     TransactionMapper transactionMapper;
+    UserService userService;
 
     public TransactionResponse create(TransactionRequest request, String postId) {
         var transaction = transactionMapper.convertEntity(request);
@@ -70,15 +71,23 @@ public class TransactionService {
     }
 
     public Page<Transaction> getAllContactsPage(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        return transactionRepository.findAll(pageable);
+        var result = transactionRepository.findAll();
+        return getAllTransactionsPageImpl(page, result);
     }
 
     public Page<Transaction> getAllContactsUserPage(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-
-        var sender = SecurityContextHolder.getContext().getAuthentication().getName();
+        var sender = userService.getCurrentUser().getName();
         var result = transactionRepository.findBySender(sender);
+        return getAllTransactionsPageImpl(page, result);
+    }
+
+    private Page<Transaction> getAllTransactionsPageImpl(int page, List<Transaction> result) {
+        int pageSize = 10;
+
+        if(result.size() < pageSize)
+            pageSize = result.size() ;
+
+        Pageable pageable = PageRequest.of(page, pageSize);
 
         int start =(int) pageable.getOffset();
         int end = Math.min( (start + pageable.getPageSize()) , result.size());
