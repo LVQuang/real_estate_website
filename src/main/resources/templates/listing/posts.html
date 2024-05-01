@@ -14,7 +14,7 @@
 <div th:fragment = "myPosts" class="row justify-content-center" style="margin-top: 2rem;">
   <h3 class="text-center mb-3">Posts</h3>
   <div class="text-center mb-5">
-    <a href="#"  class="btn btn-success">Add
+    <a href="/post/addPost"  class="btn btn-success">Add
       <i class="fa-solid fa-plus"></i>
     </a>
   </div>
@@ -26,7 +26,7 @@
       <p class="card-text" th:text="${post.description}"></p>
       <div class="row">
         <div class="col"> <a href="#" class="btn btn-primary">Detail</a></div>
-        <div class="col"> <a href="#" class="btn btn-danger">Delete</a></div>
+        <div class="col"> <a th:href="@{'/post/delete/' + ${post.id}}" class="btn btn-danger">Delete</a></div>
       </div>
     </div>
   </div>

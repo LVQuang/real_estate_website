@@ -9,6 +9,7 @@ import edu.hqh.real_estate_website.enums.PostState;
 import edu.hqh.real_estate_website.enums.TypePost;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.PostMapper;
+import edu.hqh.real_estate_website.repository.ImageRepository;
 import edu.hqh.real_estate_website.repository.PostRepository;
 import edu.hqh.real_estate_website.repository.TransactionRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
@@ -32,10 +33,10 @@ import java.util.List;
 @Slf4j
 @Service
 public class PostService {
+    ImageRepository imageRepository;
     PostRepository postRepository;
     UserRepository userRepository;
     TransactionRepository transactionRepository;
-
     UserService userService;
     PostMapper postMapper;
 
@@ -54,8 +55,27 @@ public class PostService {
     }
 
     public void delete(String id) {
-        if(!postRepository.existsById(id))
-            throw new AppException(ErrorCode.ITEM_DONT_EXISTS);
+        var post = postRepository
+                .findById(id).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+
+        var transactions = post.getTransactions();
+        transactions.forEach(transaction -> transaction.setPost(null));
+        transactionRepository.saveAll(transactions);
+
+        var images = post.getImages();
+        images.forEach(image -> image.setPost(null));
+        imageRepository.saveAll(images);
+
+        var user = post.getUser();
+        user.getPosts().remove(post);
+        userRepository.save(user);
+
+
+        post.setImages(new HashSet<>());
+        post.setTransactions(new HashSet<>());
+        post.setUser(null);
+        postRepository.save(post);
+
         postRepository.deleteById(id);
     }
 
