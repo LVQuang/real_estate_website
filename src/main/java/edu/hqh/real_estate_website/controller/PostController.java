@@ -60,16 +60,18 @@ public class PostController {
     {
         UserAddPostRequest user = new UserAddPostRequest();
         model.addAttribute("user", user);
-        return "user/addPost";
+        return "/addPost";
     }
 
     @PostMapping("/addPost")
     String postAddPost(@Valid @ModelAttribute("user") UserAddPostRequest user, RedirectAttributes redirectAttributes){
-        user.setPostDate(LocalDate.now().toString());
-        user.setId(UUID.randomUUID().toString());
+
+
         var request = postMapper.toAddPostRequest(user);
         var post = postService.create(request);
+
         redirectAttributes.addAttribute("post_id", post.getId());
+
         return "redirect:/post/addImages";
     }
 
@@ -77,7 +79,7 @@ public class PostController {
     String getAddImages(Model model, @RequestParam("post_id") String postId )
     {
         model.addAttribute("post_id", postId);
-        return "user/addImages";
+        return "/addImages";
     }
 
     @PostMapping("/addImages")
