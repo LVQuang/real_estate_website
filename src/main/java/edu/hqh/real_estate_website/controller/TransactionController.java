@@ -22,7 +22,7 @@ public class TransactionController {
     @GetMapping("/addTransaction")
     String getAddTransaction()
     {
-        return "transaction/addTransaction";
+        return "/addTransaction";
     }
     
     @GetMapping("/{pageNumber}")

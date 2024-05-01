@@ -3,6 +3,7 @@ package edu.hqh.real_estate_website.service;
 import edu.hqh.real_estate_website.dto.request.PostRequest;
 import edu.hqh.real_estate_website.dto.response.PostDetailResponse;
 import edu.hqh.real_estate_website.dto.response.PostListingResponse;
+import edu.hqh.real_estate_website.entity.Image;
 import edu.hqh.real_estate_website.entity.Post;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.PostState;
@@ -23,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -39,6 +41,8 @@ public class PostService {
     public PostDetailResponse getById(String id) {
         var post = postRepository.findById(id).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        log.info(post.getId());
+
         return postMapper.toResponse(post);
     }
 
@@ -103,4 +107,11 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, 4);
         return postRepository.findAll(pageable);
     }
+
+    public List<Image> getImagesByPostId(String postId) {
+        var post = postRepository.findById(postId)
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        return new ArrayList<Image>(post.getImages());
+    }
+
 }

@@ -19,6 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ContactController {
     ContactService contactService;
 
+    @GetMapping("/addContact")
+    String getAddContact()
+    {
+        return "/addContact";
+    }
+
     @GetMapping("/{pageNumber}")
     String getContact(Model model,
                    @RequestParam(name = "page",
@@ -58,6 +64,5 @@ public class ContactController {
             return "redirect:/contact/user/1?outPage";
         return "layout/userContacts";
     }
-
 
 }

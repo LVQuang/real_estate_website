@@ -1,6 +1,8 @@
 package edu.hqh.real_estate_website.controller;
 
 import edu.hqh.real_estate_website.dto.request.*;
+import edu.hqh.real_estate_website.dto.response.PostDetailResponse;
+import edu.hqh.real_estate_website.entity.Image;
 import edu.hqh.real_estate_website.mapper.PostMapper;
 import edu.hqh.real_estate_website.service.ImageService;
 import edu.hqh.real_estate_website.service.PostService;
@@ -55,13 +57,13 @@ public class PostController {
     @GetMapping("/addPost")
     String getAddPost(Model model)
     {
-        UserAddPostRequest user = new UserAddPostRequest();
+        AddPostRequest user = new AddPostRequest();
         model.addAttribute("user", user);
         return "/addPost";
     }
 
     @PostMapping("/addPost")
-    String postAddPost(@Valid @ModelAttribute("user") UserAddPostRequest user, RedirectAttributes redirectAttributes){
+    String postAddPost(@Valid @ModelAttribute("user") AddPostRequest user, RedirectAttributes redirectAttributes){
         var request = postMapper.toAddPostRequest(user);
         var post = postService.create(request);
 
@@ -89,17 +91,17 @@ public class PostController {
             return "redirect:/post/1?outPage";
     }
 
-
-    @GetMapping("/posts")
-    String getPostList(Model model)
-    {
-        return "listing/posts";
-    }
+//    93f02514-d6dc-44fe-93e8-3d217dcc7749
 
     @GetMapping("/postDetail")
-    String getPostDetail()
+    String getPostDetail(Model model, @RequestParam("id") String postId)
     {
-        return "user/postDetail";
+        PostDetailResponse postDetailResponse = postService.getById(postId);
+        List<Image> images = postService.getImagesByPostId(postId);
+        model.addAttribute("postDetailRep", postDetailResponse);
+        model.addAttribute("images", images);
+
+        return "/layout/postDetail";
     }
     
 }

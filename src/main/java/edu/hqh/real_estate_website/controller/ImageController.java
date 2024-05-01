@@ -7,10 +7,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,15 +31,16 @@ import java.util.List;
 public class ImageController {
     ImageService imageService;
 
-    @GetMapping("/display")
-    ResponseEntity<byte[]> displayImage(@RequestParam("id") String id)
-            throws SQLException
-    {
-        var image = imageService.getById(id);
-        byte [] imageBytes;
-        imageBytes = image.getContent()
-                .getBytes(1,(int) image.getContent().length());
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+    @GetMapping("/display/{id}")
+    public ResponseEntity<byte[]> displayImage(@PathVariable("id") String id) {
+        try {
+            Image image = imageService.getById(id);
+            byte[] imageBytes = image.getContent().getBytes(1, (int) image.getContent().length());
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+        } catch (SQLException e) {
+            log.error("Failed to retrieve image from database: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @GetMapping("/")

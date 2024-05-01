@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class UserAddPostRequest {
+public class AddPostRequest {
     @NonNull
     String id;
     @NonNull

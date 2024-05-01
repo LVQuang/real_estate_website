@@ -3,55 +3,68 @@
         <div class="col-lg-8 d-flex flex-column justify-content-start align-items-start">
 
             <div class="mb-4">
-                <h1 class="fw-bolder mb-1">Title</h1>
-                <div class="text-muted fst-italic mb-2">Posted on Dated</div>
+                <h1 class="fw-bolder mb-1" th:text="${postDetailRep.title}">Title</h1>
+                <div class="text-muted fst-italic mb-2"th:text="${postDetailRep.postDate}">Posted on Dated</div>
             </div>
 
-            <div class="d-grid mb-4" style = "
+            <div id="FirstImage" style = "
                             width: 35vw;
                             height: 35vh;
                         ">
-                Zone for First Image List
+                <div th:if="${images.size() > 0}">
+                    <div th:each="image, iterStat : ${images}" class="image-item" th:if="${iterStat.index == 0}">
+                        <img th:src="@{'/display/' + ${images[0].id}}" alt="Image" class="img-fluid" style="width: 35%; height: 35%; object-fit: cover;"/>
+                    </div>
+                </div>
+                <div th:unless="${images.size() > 0}">
+                    No images available.
+                </div>
             </div>
 
             <div class="mb-5">
-                <h2>Address</h2>
+                <h2 th:text="${postDetailRep.address}">Address</h2>
             </div>
 
             <div class="mb-5">
                 <h2>Description</h2>
-                <p class="fs-5 mb-4">Text for description</p>
+                <p class="fs-5 mb-4" th:text="${postDetailRep.description}">Text for description</p>
             </div>
 
             <div class="mb-5">
-                <h2>Type</h2>
+                <h2 th:text="${postDetailRep.type}">Type</h2>
             </div>
 
             <div class="mb-5">
-                <h2>Price</h2>
+                <h2 th:text="${postDetailRep.price}">Price</h2>
             </div>
 
-            <div class="d-grid mb-4" style = "
-                            width: 35vw;
-                            height: 35vh;
-                        ">
-                Zone for Next Three Images
+            <div id="imageList"  style=" display: flex; flex-direction: row;
+                                        width: 100%; overflow-x: auto; white-space: nowrap;">
+                <div th:if="${images.size() > 0}">
+                    <div th:each="image, iterStat : ${images}" class="image-item" th:if="${iterStat.index > 0 && iterStat.index < 4}">
+                        <img th:src="@{'/display/' + ${image.id}}" alt="Image" class="img-fluid" style="width: 30%; height: 30%; object-fit: cover;" />
+                    </div>
+                </div>
+                <div th:unless="${images.size() > 0}">
+                    No images available.
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center my-3">
+                <form th:action="@{/contact/addContact}" method="get">
+                    <button type="submit" class="btn btn-outline-success btn-lg me-2">Contact</button>
+                </form>
+
+                <form th:action="@{/transaction/addTransaction}" method="get">
+                    <button type="submit" class="btn btn-outline-success btn-lg">Transaction</button>
+                </form>
+
+
+
             </div>
 
         </div>
-
-        <div class="col-lg-4 d-flex flex-column justify-content-start align-items-start">
-
-            <div class="card mb-4">
-                Sale Post List
-            </div>
-
-            <div class="card mb-4">
-                Rent Post List
-            </div>
-
-        </div>
-
+        
     </div>
 
 </div>

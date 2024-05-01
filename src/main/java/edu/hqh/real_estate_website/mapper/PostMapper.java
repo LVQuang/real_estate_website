@@ -1,9 +1,7 @@
 package edu.hqh.real_estate_website.mapper;
 
+import edu.hqh.real_estate_website.dto.request.AddPostRequest;
 import edu.hqh.real_estate_website.dto.request.PostRequest;
-import edu.hqh.real_estate_website.dto.request.RegisterRequest;
-import edu.hqh.real_estate_website.dto.request.UserAddPostRequest;
-import edu.hqh.real_estate_website.dto.request.UserRegisterRequest;
 import edu.hqh.real_estate_website.dto.response.PostDetailResponse;
 import edu.hqh.real_estate_website.dto.response.PostListingResponse;
 import edu.hqh.real_estate_website.entity.Post;
@@ -19,5 +17,5 @@ public interface PostMapper {
     PostListingResponse toListResponse(Post post);
     @Mapping(target = "transactions", ignore = true)
     void update(@MappingTarget Post post, PostRequest request);
-    PostRequest toAddPostRequest(UserAddPostRequest request);
+    PostRequest toAddPostRequest(AddPostRequest request);
 }
