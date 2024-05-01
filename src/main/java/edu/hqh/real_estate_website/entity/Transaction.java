@@ -16,13 +16,9 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    //
     String sender;
-
     String receiver;
-    //
     LocalDate transactionDate;
-    //
     Double price;
     @ManyToOne
     Post post;

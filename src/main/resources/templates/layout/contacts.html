@@ -5,8 +5,8 @@
 <div class = "d-flex justify-content-center flex-column">
     <div th:replace = "~{fragments/navbar :: navbar}"></div>
     <div class="container d-flex justify-content-center flex-column my-5">
-            <div th:replace = "~{search/search :: pageNavigationContacts}"></div>
-            <div class = "container">
+        <div th:replace = "~{search/contacts :: contactsPage}"></div>
+        <div class = "container">
                     <div th:replace = "~{error/outPage :: outPage}"></div>
             </div>
             <div th:replace = "~{listing/contacts :: contacts}"></div>

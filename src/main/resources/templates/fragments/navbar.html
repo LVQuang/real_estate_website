@@ -23,7 +23,7 @@
             <li class="nav-item">
                 <a class="nav-link"
                    sec:authorize="hasRole('USER')"
-                   href="#">My Transactions
+                   href="/transaction/user/1">My Transactions
                 </a>
             </li>
 
@@ -44,7 +44,7 @@
             <li class="nav-item">
                 <a class="nav-link"
                    sec:authorize="hasRole('ADMIN')"
-                   href="#">Transactions
+                   href="/transaction/1">Transactions
                 </a>
             </li>
 
