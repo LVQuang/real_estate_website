@@ -7,6 +7,7 @@ import edu.hqh.real_estate_website.entity.Transaction;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.TransactionMapper;
+import edu.hqh.real_estate_website.repository.PostRepository;
 import edu.hqh.real_estate_website.repository.TransactionRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
@@ -29,22 +30,24 @@ import java.util.List;
 @Service
 public class TransactionService {
     TransactionRepository transactionRepository;
+    PostRepository postRepository;
     UserRepository userRepository;
     TransactionMapper transactionMapper;
 
-    public TransactionResponse create(TransactionRequest request, String receiverId) {
+    public TransactionResponse create(TransactionRequest request, String postId) {
         var transaction = transactionMapper.convertEntity(request);
 
         var senderName = SecurityContextHolder.getContext().getAuthentication().getName();
         var sender = userRepository.findByName(senderName).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 
-        var receiver = userRepository.findById(receiverId).orElseThrow(()
+        var post = postRepository.findById(postId).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        var receiver = post.getUser();
 
         transaction.setTransactionDate(LocalDate.now());
-        transaction.setSender(sender.getId());
-        transaction.setReceiver(receiverId);
+        transaction.setSender(sender.getName());
+        transaction.setReceiver(receiver.getName());
 
         transactionRepository.save(transaction);
 
@@ -52,6 +55,9 @@ public class TransactionService {
         receiver.getTransactions().add(transaction);
 
         userRepository.saveAll(List.of(sender, receiver));
+
+        post.getTransactions().add(transaction);
+        postRepository.save(post);
 
         return transactionMapper.toResponse(transaction);
     }
