@@ -48,4 +48,9 @@ public class UserController {
             return "redirect:/user/null?page=0&outPage=true";
         return "/layout/users";
     }
+
+    @GetMapping("/userDetail")
+    String getUserDetail() {
+        return "/online_template/userDetail";
+    }
 }
