@@ -8,7 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
-@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RequestMapping("/post")
@@ -60,16 +57,16 @@ public class PostController {
     {
         UserAddPostRequest user = new UserAddPostRequest();
         model.addAttribute("user", user);
-        return "user/addPost";
+        return "/addPost";
     }
 
     @PostMapping("/addPost")
     String postAddPost(@Valid @ModelAttribute("user") UserAddPostRequest user, RedirectAttributes redirectAttributes){
-        user.setPostDate(LocalDate.now().toString());
-        user.setId(UUID.randomUUID().toString());
         var request = postMapper.toAddPostRequest(user);
         var post = postService.create(request);
+
         redirectAttributes.addAttribute("post_id", post.getId());
+
         return "redirect:/post/addImages";
     }
 
@@ -77,7 +74,7 @@ public class PostController {
     String getAddImages(Model model, @RequestParam("post_id") String postId )
     {
         model.addAttribute("post_id", postId);
-        return "user/addImages";
+        return "/addImages";
     }
 
     @PostMapping("/addImages")
