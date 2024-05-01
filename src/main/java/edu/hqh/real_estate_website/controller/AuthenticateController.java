@@ -1,15 +1,16 @@
 package edu.hqh.real_estate_website.controller;
 
-import edu.hqh.real_estate_website.dto.request.UserForgotPasswordRequest;
-import edu.hqh.real_estate_website.dto.request.UserLoginRequest;
-import edu.hqh.real_estate_website.dto.request.UserRegisterRequest;
+import com.nimbusds.jose.JOSEException;
+import edu.hqh.real_estate_website.dto.request.*;
+import edu.hqh.real_estate_website.enums.ErrorCode;
+import edu.hqh.real_estate_website.exception.WebException;
 import edu.hqh.real_estate_website.mapper.AuthenticationMapper;
-import edu.hqh.real_estate_website.dto.request.UserResetPasswordRequest;
 import edu.hqh.real_estate_website.mapper.ForgotPasswordMapper;
 import edu.hqh.real_estate_website.mapper.RegisterMapper;
 import edu.hqh.real_estate_website.repository.UserRepository;
 import edu.hqh.real_estate_website.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.text.ParseException;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -36,8 +39,21 @@ public class AuthenticateController {
     RegisterMapper registerMapper;
 
     @GetMapping("/login")
-    String getLogin(Model model)
-    {
+    String getLogin(Model model, HttpServletRequest request)
+            throws ParseException, JOSEException {
+        HttpSession session = request.getSession();
+        String token =(String) session.getAttribute("myToken");
+
+        if(token != null) {
+            authenticationService
+                    .logout(LogoutRequest.builder()
+                            .token(token)
+                            .build());
+            session.removeAttribute("myToken");
+        }
+
+        log.info(token);
+
         UserLoginRequest user = new UserLoginRequest();
         model.addAttribute("user", user);
         return "user/login";
@@ -49,7 +65,8 @@ public class AuthenticateController {
     {
         var authRequest = authenticationMapper.toAuthenticationRequest(user);
         var authentication = authenticationService.authenticate(authRequest, true);
-        log.info(String.valueOf(authentication.isAuthenticated()));
+
+
         if(!authentication.isAuthenticated())
             return "redirect:/auth/login?incorrect";
         else
@@ -57,6 +74,21 @@ public class AuthenticateController {
             httpRequest.getSession().setAttribute("myToken", authentication.getToken());
             return "redirect:/post/1";
         }
+    }
+
+    @GetMapping("/logout")
+    String getLogout(HttpServletRequest request) throws ParseException, JOSEException {
+        HttpSession session = request.getSession();
+        String token =(String) session.getAttribute("myToken");
+
+        var refresh = authenticationService
+                .refreshToken(RefreshRequest.builder()
+                        .token(token)
+                        .build());
+
+        session.setAttribute("myToken", refresh.getToken());
+
+        return "redirect:/auth/login";
     }
 
     @GetMapping("/register")

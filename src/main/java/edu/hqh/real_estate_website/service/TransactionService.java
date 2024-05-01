@@ -2,6 +2,8 @@ package edu.hqh.real_estate_website.service;
 
 import edu.hqh.real_estate_website.dto.request.TransactionRequest;
 import edu.hqh.real_estate_website.dto.response.TransactionResponse;
+import edu.hqh.real_estate_website.entity.Contact;
+import edu.hqh.real_estate_website.entity.Transaction;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.TransactionMapper;
@@ -11,6 +13,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -57,4 +63,21 @@ public class TransactionService {
                 .toList();
     }
 
+    public Page<Transaction> getAllContactsPage(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return transactionRepository.findAll(pageable);
+    }
+
+    public Page<Transaction> getAllContactsUserPage(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        var sender = SecurityContextHolder.getContext().getAuthentication().getName();
+        var result = transactionRepository.findBySender(sender);
+
+        int start =(int) pageable.getOffset();
+        int end = Math.min( (start + pageable.getPageSize()) , result.size());
+
+        var content = result.subList(start, end);
+        return new PageImpl<>(content, pageable, result.size());
+    }
 }

@@ -48,11 +48,13 @@ public class PostController {
             pageNumber = 1;
         var result = postService.getAllPostsPage(pageNumber);
         var posts = result.getContent();
-        log.info(String.valueOf(result.getTotalPages()));
-        log.info(String.valueOf(pageNumber));
+        model.addAttribute("posts", posts);
+        model.addAttribute("totalPages", result.getTotalPages());
+        if(result.getTotalPages() == 0) {
+            return "index";
+        }
         if(result.getTotalPages() <= pageNumber)
             return "redirect:/post/1?outPage";
-        model.addAttribute("posts", posts);
         return "index";
     }
 
@@ -94,6 +96,7 @@ public class PostController {
             image.setImageDate(LocalDate.now());
 
             PostDetailResponse postRep = postService.getById(postId);
+            postMapper.
 
             Post post = new Post();
             post.setId(postRep.getId());

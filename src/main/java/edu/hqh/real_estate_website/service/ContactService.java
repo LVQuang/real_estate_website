@@ -2,6 +2,8 @@ package edu.hqh.real_estate_website.service;
 
 import edu.hqh.real_estate_website.dto.request.ContactRequest;
 import edu.hqh.real_estate_website.dto.response.ContactResponse;
+import edu.hqh.real_estate_website.entity.Contact;
+import edu.hqh.real_estate_website.entity.Post;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.ContactMapper;
@@ -11,6 +13,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +41,8 @@ public class ContactService {
         var receiver = userRepository.findById(receiverId).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
         contact.setContactDate(LocalDate.now());
-        contact.setSender(sender.getId());
-        contact.setReceiver(receiverId);
+        contact.setSender(sender.getName());
+        contact.setReceiver(receiver.getName());
 
         contactRepository.save(contact);
 
@@ -69,5 +75,23 @@ public class ContactService {
         userRepository.saveAll(List.of(sender, receiver));
 
         contactRepository.deleteById(id);
+    }
+
+    public Page<Contact> getAllContactsPage(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return contactRepository.findAll(pageable);
+    }
+
+    public Page<Contact> getAllContactsUserPage(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        var sender = SecurityContextHolder.getContext().getAuthentication().getName();
+        var result = contactRepository.findBySender(sender);
+
+        int start =(int) pageable.getOffset();
+        int end = Math.min( (start + pageable.getPageSize()) , result.size());
+
+        var content = result.subList(start, end);
+        return new PageImpl<>(content, pageable, result.size());
     }
 }

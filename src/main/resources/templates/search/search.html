@@ -25,8 +25,8 @@
                id="page" placeholder="Page"
                name="page">
         <div class="badge bg-success text-wrap mx-2"
-             style="width: 3rem;">
-            /100
+             style="width: 3rem;"
+        th:text = "'/ ' + ${totalPages}">
         </div>
     </div>
     <button th:replace = "~{fragments/button :: smallSearchBtn}">
