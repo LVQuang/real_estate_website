@@ -11,12 +11,21 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+//    @ExceptionHandler(value = Exception.class)
+//    public ModelAndView handlingOtherException(RuntimeException exception) {
+//        log.info("Exception: " + exception);
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("error/otherException");
+//        modelAndView.addObject("message", exception.getMessage());
+//        return modelAndView;
+//    }
+
     @ExceptionHandler(value = Exception.class)
-    public ModelAndView handlingOtherException(RuntimeException exception) {
-        log.info("Exception: " + exception);
+    public ModelAndView handlingOtherException() {
+//        log.info("Exception: " + exception);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("error/otherException");
-        modelAndView.addObject("message", exception.getMessage());
+        modelAndView.addObject("message", "Unknown error occurred");
         return modelAndView;
     }
 

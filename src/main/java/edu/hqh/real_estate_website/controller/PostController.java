@@ -91,7 +91,6 @@ public class PostController {
         return "redirect:/post/1?outPage";
     }
 
-//    93f02514-d6dc-44fe-93e8-3d217dcc7749
 
     @GetMapping("/postDetail")
     String getPostDetail(Model model, @RequestParam("id") String postId)
