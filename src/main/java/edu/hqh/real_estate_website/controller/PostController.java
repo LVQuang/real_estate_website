@@ -74,11 +74,11 @@ public class PostController {
         model.addAttribute("totalPages",
                 result.getTotalPages());
         if(result.getTotalPages() == 0) {
-            return "index";
+            return "layout/myPosts";
         }
         if(result.getTotalPages() <= pageNumber)
             return "redirect:/post/myPost/null?page=0&outPage=true";
-        return "index";
+        return "layout/myPosts";
     }
 
 
