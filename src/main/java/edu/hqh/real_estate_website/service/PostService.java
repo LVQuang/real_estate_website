@@ -6,6 +6,7 @@ import edu.hqh.real_estate_website.dto.response.PostListingResponse;
 import edu.hqh.real_estate_website.entity.Post;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.enums.PostState;
+import edu.hqh.real_estate_website.enums.TypePost;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.PostMapper;
 import edu.hqh.real_estate_website.repository.PostRepository;
@@ -55,26 +56,33 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
+
     public PostDetailResponse create(PostRequest request) {
         var post = postMapper.convertEntity(request);
-        var userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        var user = userRepository.findByName(userName).orElseThrow(()
-                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
-        var userPost = user.getPosts();
-        userPost.add(post);
+//        var userName = SecurityContextHolder.getContext().getAuthentication().getName();
+//        var user = userRepository.findByName(userName).orElseThrow(()
+//                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+//        var userPost = user.getPosts();
+//        userPost.add(post);
+//
+//        post.setUser(user);
+//        user.setPosts(userPost);
 
-        post.setUser(user);
-        user.setPosts(userPost);
         post.setPostDate(LocalDate.now());
         post.setAvailable(PostState.YES);
+        post.setTitle(request.getTitle());
+        post.setAddress(request.getAddress());
+        post.setPrice(request.getPrice());
+        post.setDescription(request.getDescription());
+        post.setType(TypePost.valueOf(request.getType()));
 
-        userRepository.save(user);
+//        userRepository.save(user);
         return postMapper.toResponse(postRepository.save(post));
     }
 
     public PostDetailResponse update(PostRequest request, String id) {
         var post = postRepository.findById(id).orElseThrow(()
-                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+                -> new AppException(ErrorCode.ITEM_DONT_EXISTS) );
 
         postMapper.update(post, request);
         if(request.getTransactions() != null) {
