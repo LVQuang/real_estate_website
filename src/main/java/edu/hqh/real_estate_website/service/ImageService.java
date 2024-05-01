@@ -18,7 +18,9 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -48,25 +50,31 @@ public class ImageService {
 
     public boolean createListImage(List<MultipartFile> files, String postId)
             throws IOException, SQLException {
+
+        Set<Image> images = new HashSet<>();
+
         for (MultipartFile file : files) {
+
             byte[] bytes = file.getBytes();
             Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+
             var image = Image.builder()
                     .content(blob)
                     .imageDate(LocalDate.now())
                     .build();
 
-            Post post = postRepository.findById(postId)
-                    .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
-
-            post.setImages(Collections.singleton(image));
-
-            image.setPost(post);
-
-            imageRepository.save(image);
-
+            images.add(image);
         }
 
+        imageRepository.saveAll(images);
+
+        var post = postRepository.findById(postId)
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+
+        post.setImages(images);
+
+        postRepository.save(post);
+        log.info("Add Images Successfully");
         return true;
     }
 }

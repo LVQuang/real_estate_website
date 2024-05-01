@@ -12,7 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
-    public ModelAndView handlingOtherException(Exception exception) {
+    public ModelAndView handlingOtherException(RuntimeException exception) {
+        log.info("Exception: " + exception);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("error/otherException");
         modelAndView.addObject("message", exception.getMessage());

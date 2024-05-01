@@ -59,14 +59,15 @@ public class PostService {
 
     public PostDetailResponse create(PostRequest request) {
         var post = postMapper.convertEntity(request);
-//        var userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        var user = userRepository.findByName(userName).orElseThrow(()
-//                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
-//        var userPost = user.getPosts();
-//        userPost.add(post);
-//
-//        post.setUser(user);
-//        user.setPosts(userPost);
+        var userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = userRepository.findByName(userName).orElseThrow(()
+                -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+
+        var userPost = user.getPosts();
+        userPost.add(post);
+
+        post.setUser(user);
+        user.setPosts(userPost);
 
         post.setPostDate(LocalDate.now());
         post.setAvailable(PostState.YES);
@@ -76,7 +77,8 @@ public class PostService {
         post.setDescription(request.getDescription());
         post.setType(TypePost.valueOf(request.getType()));
 
-//        userRepository.save(user);
+        userRepository.save(user);
+
         return postMapper.toResponse(postRepository.save(post));
     }
 
