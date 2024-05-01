@@ -1,9 +1,9 @@
-<form th:fragment = "query"
+<form th:fragment = "myPost"
       class="d-flex align-items-center justify-content-center flex-column"
       method="get"
       style= "gap: 1rem;"
       role= "form"
-      th:action="@{/post/+ ${page}}"
+      th:action="@{/post/user/ + ${page}}"
 >
   <div style= "gap: 1rem;" class="d-flex align-items-center justify-content-center flex-row">
     <input class="form-control-lg w-30" type="text" name="searchKey" placeholder="enter location">
