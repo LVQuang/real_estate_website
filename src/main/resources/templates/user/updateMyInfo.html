@@ -9,8 +9,8 @@
 </head>
 
 <body>
-    <div th:insert="~{navbar.html}"></div>
-    <div class="accountInfo_container">
+<div th:replace = "~{fragments/navbar :: navbar}"></div>
+<div class="accountInfo_container">
         <div class="account_form_container">
             <form method="post">
                 <div class="row">
@@ -56,11 +56,8 @@
                         </button>
                     </div>
                 </div>
-
             </form>
-
         </div>
     </div>
-    <div th:insert="~{footer.html}"></div>
 </body>
 </html>
