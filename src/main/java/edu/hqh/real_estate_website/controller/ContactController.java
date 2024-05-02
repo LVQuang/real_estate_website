@@ -4,6 +4,7 @@ import edu.hqh.real_estate_website.dto.request.ContactRequest;
 import edu.hqh.real_estate_website.dto.request.UserRequest;
 import edu.hqh.real_estate_website.service.ContactService;
 import edu.hqh.real_estate_website.service.PostService;
+import edu.hqh.real_estate_website.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,22 +23,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ContactController {
     ContactService contactService;
-    PostService postService;
 
-    @GetMapping("/addContact")
-    String getAddContact()
+    @GetMapping("/renderContact/{contactId}")
+    String renderContact(Model model, @PathVariable String contactId)
     {
-//        var request = UserRequest.builder()
-//                .id(id)
-//                .build();
-//        contactService.create()
-//        var id = postService.getById();
-//
-//        log.info(request.getId());
-//        var response = userService.getById(request.getId());
-//        model.addAttribute("response",response);
-
-        return "/addContact";
+        var mess = ContactRequest.builder()
+                .message("I want to contact with you")
+                .build();
+        var contact = contactService.create(mess,contactId);
+        model.addAttribute("request",contact);
+        return "layout/renderContact";
     }
 
     @GetMapping("/{pageNumber}")

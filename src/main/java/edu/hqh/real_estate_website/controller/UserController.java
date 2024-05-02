@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,8 +22,22 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/myInfo")
-    String getMyInfo() {
-        return "/user/updateMyInfo";
+    String getMyInfo(Model model) {
+        var id = userService.getCurrentUser().getId();
+        var request = UserRequest.builder()
+                .id(id)
+                .build();
+        log.info(request.getId());
+        var response = userService.getById(request.getId());
+        model.addAttribute("response",response);
+        return "/user/myInfo";
+    }
+
+    @GetMapping("/userDetail/{userId}")
+    String getUserDetail(Model model,@PathVariable String userId){
+        var user = userService.getById(userId);
+        model.addAttribute("user", user);
+        return "online_template/userDetail";
     }
     @GetMapping("/{pageNumber}")
     String getUsers(Model model,
@@ -52,15 +67,4 @@ public class UserController {
         return "/layout/users";
     }
 
-    @GetMapping("/userDetail")
-    String getUserDetail(Model model) {
-        var id = userService.getCurrentUser().getId();
-        var request = UserRequest.builder()
-                .id(id)
-                .build();
-        log.info(request.getId());
-        var response = userService.getById(request.getId());
-        model.addAttribute("response",response);
-        return "/online_template/userDetail";
-    }
 }

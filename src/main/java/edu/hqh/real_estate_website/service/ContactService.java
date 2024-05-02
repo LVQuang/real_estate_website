@@ -55,6 +55,10 @@ public class ContactService {
         return contactMapper.toResponse(contact);
     }
 
+//    public ContactResponse message(ContactRequest request, String userId){
+//
+//    }
+
     public List<ContactResponse> getAll() {
         var contacts = contactRepository.findAll();
         return contacts.stream()

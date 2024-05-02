@@ -107,6 +107,27 @@ public class AuthenticationService {
                 .build();
     }
 
+    public boolean checkNameExist(UserRegisterRequest user){
+        if(userRepository.existsByName(user.getName())){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkEmailExist(ForgotPasswordRequest user){
+        if(userRepository.existsByEmail(user.getEmail())){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkEmailExistForReset(ResetPasswordRequest user){
+        if(userRepository.existsByEmail(user.getEmail())){
+            return true;
+        }
+        return false;
+    }
+
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 

@@ -8,6 +8,7 @@
 <div th:fragment="updateForm" class="accountInfo_container">
         <div class="account_form_container">
             <form method="post">
+
                 <div class="row">
                     <h3>Account information</h3>
                 </div>
@@ -15,7 +16,7 @@
                 <div class="row">
                     <div class="name_container">
                         <p>Name</p>
-                        <input class="account_name" type="text" name="account_name">
+                        <input class="account_name" type="text" name="account_name" >
                     </div>
                 </div>
 
@@ -37,9 +38,8 @@
                     <div class="gender_container">
                         <p>Gender</p>
                         <select class="account_gender"  name="account_gender">
-                            <option value="" disabled selected>Select gender</option>
-                            <option value="gender1">Male</option>
-                            <option value="gender2">Female</option>
+                            <option>Male</option>
+                            <option>Female</option>
                         </select>
                     </div>
                 </div>
