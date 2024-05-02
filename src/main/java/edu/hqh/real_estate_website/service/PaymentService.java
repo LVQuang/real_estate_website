@@ -12,6 +12,7 @@ import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -28,6 +29,7 @@ public class PaymentService {
 
     UserRepository userRepository;
 
+    @PreAuthorize("hasRole('USER')")
     public String getPay(User user) throws UnsupportedEncodingException {
 
         String orderType = "other";
@@ -95,6 +97,7 @@ public class PaymentService {
 
     }
 
+    @PreAuthorize("hasRole('USER')")
     public PaymentResponse payment(PaymentRequest request) throws UnsupportedEncodingException {
         var user = userRepository.findByName(request.getName()).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 

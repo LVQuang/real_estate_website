@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ public class ContactService {
     ContactMapper contactMapper;
     UserService userService;
 
+    @PreAuthorize("hasRole('USER')")
     public ContactResponse create(ContactRequest request, String userId) {
         var contact = contactMapper.convertEntity(request);
         var senderName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -55,10 +57,7 @@ public class ContactService {
         return contactMapper.toResponse(contact);
     }
 
-//    public ContactResponse message(ContactRequest request, String userId){
-//
-//    }
-
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<ContactResponse> getAll() {
         var contacts = contactRepository.findAll();
         return contacts.stream()
@@ -66,11 +65,13 @@ public class ContactService {
                 .toList();
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Contact> getAllMyContacts() {
         var sender = userService.getCurrentUser().getName();
         return contactRepository.findBySender(sender);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public void delete(String id) {
         var contact = contactRepository.findById(id).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
@@ -87,17 +88,20 @@ public class ContactService {
         contactRepository.deleteById(id);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Page<Contact> getAllContactsPage(int page) {
         var result = contactRepository.findAll();
         return getAllContactsPageImpl(page, result);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Page<Contact> getAllContactsUserPage(int page) {
         var sender = userService.getCurrentUser().getName();
         var result = contactRepository.findBySender(sender);
         return getAllContactsPageImpl(page, result);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     private Page<Contact> getAllContactsPageImpl(int page, List<Contact> result) {
         int pageSize = 10;
 

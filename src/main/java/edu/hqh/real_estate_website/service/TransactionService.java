@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class TransactionService {
     TransactionMapper transactionMapper;
     UserService userService;
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public TransactionResponse create(TransactionRequest request, String postId) {
         var transaction = transactionMapper.convertEntity(request);
 
@@ -65,6 +67,7 @@ public class TransactionService {
         return transactionMapper.toResponse(transaction);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public void accept(String transactionId) {
         var transaction = getById(transactionId);
         transaction.setState("Accept");
@@ -77,6 +80,7 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<TransactionResponse> getAll() {
         var transactions = transactionRepository.findAll();
         return transactions.stream()
@@ -84,28 +88,33 @@ public class TransactionService {
                 .toList();
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Transaction> getMyTransactions() {
         var sender = userService.getCurrentUser().getName();
         return transactionRepository.findBySender(sender);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Page<Transaction> getAllContactsPage(int page) {
         var result = transactionRepository.findAll();
         return getAllTransactionsPageImpl(page, result);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Transaction getById(String transactionId) {
         var transaction = transactionRepository.
                 findById(transactionId).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
         return transaction;
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Page<Transaction> getAllContactsUserPage(int page) {
         var sender = userService.getCurrentUser().getName();
         var result = transactionRepository.findBySender(sender);
         return getAllTransactionsPageImpl(page, result);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     private Page<Transaction> getAllTransactionsPageImpl(int page, List<Transaction> result) {
         int pageSize = 10;
 

@@ -71,12 +71,6 @@ public class TransactionController {
         return "redirect:/transaction/user/null?page=0";
     }
 
-    @GetMapping("/addTransaction")
-    String getAddTransaction()
-    {
-        return "add/addTransaction";
-    }
-    
     @GetMapping("/{pageNumber}")
     String getTransaction(Model model,
                    @RequestParam(name = "page",

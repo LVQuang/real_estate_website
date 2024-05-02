@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,24 +29,30 @@ public class ImageService {
     ImageRepository imageRepository;
     PostRepository postRepository;
 
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Image create(Image image) {
         
         image.setImageDate(LocalDate.now());
         return imageRepository.save(image);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Image> getAll() {
         return (List<Image>) imageRepository.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Image getById(String id) {
         return imageRepository.findById(id).get();
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public void delete(String id) {
         imageRepository.deleteById(id);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public boolean createListImage(List<MultipartFile> files, String postId)
             throws IOException, SQLException {
 

@@ -1,7 +1,10 @@
 package edu.hqh.real_estate_website.controller;
 
 import edu.hqh.real_estate_website.dto.request.ContactRequest;
+import edu.hqh.real_estate_website.dto.request.TransactionRequest;
 import edu.hqh.real_estate_website.dto.request.UserRequest;
+import edu.hqh.real_estate_website.dto.response.ContactResponse;
+import edu.hqh.real_estate_website.dto.response.TransactionResponse;
 import edu.hqh.real_estate_website.service.ContactService;
 import edu.hqh.real_estate_website.service.PostService;
 import edu.hqh.real_estate_website.service.UserService;
@@ -11,10 +14,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -23,16 +25,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ContactController {
     ContactService contactService;
+    UserService userService;
 
-    @GetMapping("/renderContact/{contactId}")
-    String renderContact(Model model, @PathVariable String contactId)
+    @GetMapping("/create/{contactId}")
+    String createContact(Model model, @PathVariable String contactId)
     {
-        var mess = ContactRequest.builder()
-                .message("I want to contact with you")
+        var contact = ContactResponse.builder()
+                .contactDate(LocalDate.now())
+                .sender(userService.getCurrentUser().getName())
+                .receiver(userService.getById(contactId).getName())
                 .build();
-        var contact = contactService.create(mess,contactId);
+
         model.addAttribute("request",contact);
-        return "layout/renderContact";
+        return "add/addContact";
+    }
+
+    @PostMapping("/create")
+    String postCreate(@RequestParam(name = "message") String mess,
+                      @RequestParam(name = "contactId") String contactId) {
+        var request = ContactRequest.builder()
+                .message(mess)
+                .build();
+        contactService.create(request, contactId);
+        return "index";
     }
 
     @GetMapping("/{pageNumber}")

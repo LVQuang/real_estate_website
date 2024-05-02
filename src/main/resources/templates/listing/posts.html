@@ -6,7 +6,7 @@
     <div class="card-body">
       <h5 class="card-title" th:text="${post.title}"></h5>
       <p class="card-text" th:text="${post.description}"></p>
-      <a href="#" class="btn btn-primary">Detail</a>
+      <a th:href="@{'/post/postDetail?id=' + ${post.id}}" class="btn btn-primary">Detail</a>
     </div>
   </div>
 </div>
@@ -25,7 +25,7 @@
       <h5 class="card-title" th:text="${post.title}"></h5>
       <p class="card-text" th:text="${post.description}"></p>
       <div class="row">
-        <div class="col"> <a href="#" class="btn btn-primary">Detail</a></div>
+        <div class="col"> <a th:href="@{'/post/postDetail?id=' + ${post.id}}" class="btn btn-primary">Detail</a></div>
         <div class="col"> <a th:href="@{'/post/delete/' + ${post.id}}" class="btn btn-danger">Delete</a></div>
       </div>
     </div>

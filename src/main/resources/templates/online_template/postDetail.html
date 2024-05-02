@@ -315,8 +315,9 @@
 
                     <div class="card">
                         <div class="body">
-                            <a href="/transaction/addTransaction"  class="btn btn-success">Add Transaction
-                                <i class="fa-solid fa-plus"></i></a>
+                            <form th:action="@{'/transaction/create/' + ${postDetailRep.id} }" method="get">
+                                <button type="submit" class="btn btn-outline-success btn-lg">Transaction</button>
+                            </form>
                         </div>
                     </div>
                 </div>

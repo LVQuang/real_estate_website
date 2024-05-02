@@ -31,15 +31,25 @@
                         <p th:text="${request.receiver}">...</p>
                     </div>
 
-                    <textarea class="form-control mb-3"
-                              rows="3"
-                              style="width: 100%;"
-                              required
-                              th:text="${request.message}"
-                              th:attr="disabled=${true}">
-                    </textarea>
+                    <form method="post"
+                          role="form"
+                          th:action="@{/contact/create}"
+                    >
+                          <input class="form-control mb-3"
+                                    type="text"
+                                    style="width: 100%;"
+                                    name="message"
+                                    th:placeholder="${contactId}"
+                                    required>
+                        <input class="form-control" type="hidden" name="contactId" th:value="${contactId}">
+                        <button class="btn btn-outline-success"
+                                type="submit"
+                                name="login">
+                            <i class="fa-solid fa-check"></i>
+                        </button>
+                    </form>
 
-                    <a href="/contact/user/null?page=0"  class="btn btn-success">Create</a>
+
 
                 </div>
 

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<UserResponse> getAll() {
         var users = userRepository.findAll();
         return users.stream()
@@ -44,17 +46,20 @@ public class UserService {
                 .toList();
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public UserResponse getById(String id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
         return userMapper.toResponse(user);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public UserResponse getMyInfo() {
         var user = getCurrentUser();
         return userMapper.toResponse(user);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public UserResponse update(UserRequest request) {
         var user = getCurrentUser();
         userMapper.update(user, request);
@@ -75,17 +80,20 @@ public class UserService {
         return userMapper.toResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public User getCurrentUser() {
         var name = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByName(name)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Page<User> getAllUsersPage(int page) {
         var result = userRepository.findAll();
         return getAllUsersPageImpl(page , result);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     private Page<User> getAllUsersPageImpl(int page, List<User> result) {
         int pageSize = 10;
 
