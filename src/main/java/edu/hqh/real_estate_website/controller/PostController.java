@@ -125,7 +125,7 @@ public class PostController {
         model.addAttribute("postDetailRep", postDetailResponse);
         model.addAttribute("images", images);
 
-        return "/layout/postDetail";
+        return "/online_template/postDetail";
     }
     
 }

@@ -1,5 +1,6 @@
 package edu.hqh.real_estate_website.controller;
 
+import edu.hqh.real_estate_website.dto.request.UserRequest;
 import edu.hqh.real_estate_website.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,14 @@ public class UserController {
     }
 
     @GetMapping("/userDetail")
-    String getUserDetail() {
+    String getUserDetail(Model model) {
+        var id = userService.getCurrentUser().getId();
+        var request = UserRequest.builder()
+                .id(id)
+                .build();
+        log.info(request.getId());
+        var response = userService.getById(request.getId());
+        model.addAttribute("response",response);
         return "/online_template/userDetail";
     }
 }

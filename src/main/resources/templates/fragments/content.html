@@ -1,52 +1,39 @@
 <div th:fragment="content" class="container mt-2" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="row">
-        <div class="col-lg-8 d-flex flex-column justify-content-start align-items-start">
+        <div class="col-12" style="font-family: serif">
+
+            <div class="row mb-2 text-center">
+                <div class="col-12">
+                    <h1 class="fw-bolder mb-1" th:text="${postDetailRep.title}">Title</h1>
+                    <h3 th:text="${postDetailRep.postDate}">Posted on Dated</h3>
+                </div>
+
+            </div>
+
+            <div class="row mb-2">
+                <div th:replace="~{fragments/slider :: custom_slider}">
+                </div>
+            </div>
+
+            <div class="row mb-2 text-center">
+                <div class="col-12">
+                    <h1>Description</h1>
+                    <h3 th:text="${postDetailRep.description}">Text for description</h3>
+                </div>
+            </div>
+
+            <div class="row mb-2 text-center">
+                <div class="col-6">
+                    <h2 th:text="${postDetailRep.address}">Address</h2>
+                </div>
+                <div class="col-6">
+                    <h2 th:text="${postDetailRep.price}">Price</h2>
+                </div>
+
+            </div>
 
             <div class="mb-4">
-                <h1 class="fw-bolder mb-1" th:text="${postDetailRep.title}">Title</h1>
-                <div class="text-muted fst-italic mb-2"th:text="${postDetailRep.postDate}">Posted on Dated</div>
-            </div>
-
-            <div id="FirstImage" style = "
-                            width: 35vw;
-                            height: 35vh;
-                        ">
-                <div th:if="${images.size() > 0}">
-                    <div th:each="image, iterStat : ${images}" class="image-item" th:if="${iterStat.index == 0}">
-                        <img th:src="@{'/display/' + ${images[0].id}}" alt="Image" class="img-fluid" style="width: 35%; height: 35%; object-fit: cover;"/>
-                    </div>
-                </div>
-                <div th:unless="${images.size() > 0}">
-                    No images available.
-                </div>
-            </div>
-
-            <div class="mb-5">
-                <h2 th:text="${postDetailRep.address}">Address</h2>
-            </div>
-
-            <div class="mb-5">
-                <h2>Description</h2>
-                <p class="fs-5 mb-4" th:text="${postDetailRep.description}">Text for description</p>
-            </div>
-
-            <div class="mb-5">
-                <h2 th:text="${postDetailRep.type}">Type</h2>
-            </div>
-
-            <div class="mb-5">
-                <h2 th:text="${postDetailRep.price}">Price</h2>
-            </div>
-
-            <div id="imageList"  style=" display: flex; flex-direction: row;
-                                        width: 100%; overflow-x: auto; white-space: nowrap;">
-                <div th:if="${images.size() > 0}">
-                    <div th:each="image, iterStat : ${images}" class="image-item" th:if="${iterStat.index > 0 && iterStat.index < 4}">
-                        <img th:src="@{'/display/' + ${image.id}}" alt="Image" class="img-fluid" style="width: 30%; height: 30%; object-fit: cover;" />
-                    </div>
-                </div>
-                <div th:unless="${images.size() > 0}">
-                    No images available.
+                <div th:replace="~{fragments/slider :: img_slider}">
                 </div>
             </div>
 

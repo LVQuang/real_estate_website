@@ -1,6 +1,9 @@
 package edu.hqh.real_estate_website.controller;
 
+import edu.hqh.real_estate_website.dto.request.ContactRequest;
+import edu.hqh.real_estate_website.dto.request.UserRequest;
 import edu.hqh.real_estate_website.service.ContactService;
+import edu.hqh.real_estate_website.service.PostService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,10 +21,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ContactController {
     ContactService contactService;
+    PostService postService;
 
     @GetMapping("/addContact")
     String getAddContact()
     {
+//        var request = UserRequest.builder()
+//                .id(id)
+//                .build();
+//        contactService.create()
+//        var id = postService.getById();
+//
+//        log.info(request.getId());
+//        var response = userService.getById(request.getId());
+//        model.addAttribute("response",response);
+
         return "/addContact";
     }
 
