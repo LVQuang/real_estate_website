@@ -144,6 +144,8 @@ public class PostController {
         return "/online_template/postDetail";
     }
 
+
+
     @GetMapping("/delete/{pageNumber}")
     String deletePost(@PathVariable String pageNumber) {
         postService.delete(pageNumber);

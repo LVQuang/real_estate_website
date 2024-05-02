@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ public class PostService {
     UserService userService;
     PostMapper postMapper;
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public PostDetailResponse getById(String id) {
         var post = postRepository.findById(id).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
@@ -50,6 +52,7 @@ public class PostService {
         return postMapper.toResponse(post);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<PostListingResponse> getAll() {
         var posts = postRepository.findAll();
         return posts
@@ -58,11 +61,13 @@ public class PostService {
                 .toList();
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Post> getMyPosts() {
         var user = userService.getCurrentUser();
         return postRepository.findByUser(user);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public void delete(String id) {
         var post = postRepository
                 .findById(id).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
@@ -88,7 +93,7 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
-
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public PostDetailResponse create(PostRequest request) {
         var post = postMapper.convertEntity(request);
         var userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -114,6 +119,7 @@ public class PostService {
         return postMapper.toResponse(postRepository.save(post));
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public PostDetailResponse update(PostRequest request, String id) {
         var post = postRepository.findById(id).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS) );
@@ -131,17 +137,20 @@ public class PostService {
         return postMapper.toResponse(post);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Page<Post> getAllPostsPage(int page) {
         var result = postRepository.findAll();
         return getAllPostsPageImpl(page, result);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Page<Post> getAllMyPostPage(int page) {
         var user = userService.getCurrentUser();
         var result = postRepository.findByUser(user);
         return getAllPostsPageImpl(page, result);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     private Page<Post> getAllPostsPageImpl(int page, List<Post> result) {
         int pageSize = 4;
 
@@ -157,6 +166,7 @@ public class PostService {
         return new PageImpl<>(content, pageable, result.size());
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Image> getImagesByPostId(String postId) {
         var post = postRepository.findById(postId)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
