@@ -2,6 +2,7 @@ package edu.hqh.real_estate_website.service;
 
 import edu.hqh.real_estate_website.dto.request.UserRequest;
 import edu.hqh.real_estate_website.dto.response.UserResponse;
+import edu.hqh.real_estate_website.entity.Contact;
 import edu.hqh.real_estate_website.entity.Transaction;
 import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;

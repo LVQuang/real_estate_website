@@ -32,7 +32,7 @@ public class PaymentService {
 
         String orderType = "other";
         String vnp_IpAddr = "127.0.0.1";
-        long amount = 50000 * 100;
+        long amount = 10000 * 100;
         String bankCode = "NCB";
         String vnp_TxnRef = PaymentConfig.getRandomNumber(8);
         String vnp_TmnCode = PaymentConfig.vnp_TmnCode;
