@@ -47,6 +47,9 @@ public class ContactController {
         if(pageNumber == null)
             pageNumber =0;
 
+        if (contactService.getAll().isEmpty())
+            return "/layout/contacts";
+
         var result = contactService.getAllContactsPage(pageNumber);
         var contacts = result.getContent();
         model.addAttribute("contacts", contacts);
@@ -70,6 +73,9 @@ public class ContactController {
             pageNumber-=1;
         if(pageNumber == null)
             pageNumber =0;
+
+        if (contactService.getAllMyContacts().isEmpty())
+            return "layout/userContacts";
 
         var result = contactService.getAllContactsUserPage(pageNumber);
         var contacts = result.getContent();

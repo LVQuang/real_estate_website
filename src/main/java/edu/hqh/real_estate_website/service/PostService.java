@@ -58,6 +58,11 @@ public class PostService {
                 .toList();
     }
 
+    public List<Post> getMyPosts() {
+        var user = userService.getCurrentUser();
+        return postRepository.findByUser(user);
+    }
+
     public void delete(String id) {
         var post = postRepository
                 .findById(id).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));

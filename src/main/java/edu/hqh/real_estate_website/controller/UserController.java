@@ -50,10 +50,12 @@ public class UserController {
         if(pageNumber == null)
             pageNumber =0;
 
+        if (userService.getAll().isEmpty())
+            return "/layout/users";
+
         var result = userService.getAllUsersPage(pageNumber);
         var users = result.getContent();
 
-        log.info(String.valueOf(users.isEmpty()));
 
         model.addAttribute("users", users);
         model.addAttribute("totalPages", result.getTotalPages());

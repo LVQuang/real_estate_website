@@ -66,6 +66,11 @@ public class ContactService {
                 .toList();
     }
 
+    public List<Contact> getAllMyContacts() {
+        var sender = userService.getCurrentUser().getName();
+        return contactRepository.findBySender(sender);
+    }
+
     public void delete(String id) {
         var contact = contactRepository.findById(id).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
