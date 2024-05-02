@@ -66,7 +66,7 @@ public class TransactionController {
     @GetMapping("/addTransaction")
     String getAddTransaction()
     {
-        return "layout/addTransaction";
+        return "add/addTransaction";
     }
     
     @GetMapping("/{pageNumber}")
