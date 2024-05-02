@@ -5,6 +5,8 @@
     <th scope="col">Receiver</th>
     <th scope="col">Price</th>
     <th scope="col">Date</th>
+    <th scope="col">State</th>
+    <th scope="col"></th>
   </tr>
   </thead>
   <tbody>
@@ -13,6 +15,8 @@
     <td th:text="${transaction.receiver}"></td>
     <td th:text="${transaction.price}"></td>
     <td th:text="${transaction.transactionDate.toString()}"></td>
+    <td th:text="${transaction.state}"></td>
+    <td><a th:href="@{'/transaction/renderTransaction/' + ${transaction.id}}" class="btn btn-primary">Detail</a></td>
   </tr>
   </tbody>
 </table>

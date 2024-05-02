@@ -20,6 +20,7 @@ public class Transaction {
     String receiver;
     LocalDate transactionDate;
     Double price;
+    String state;
     @ManyToOne
     Post post;
 }
