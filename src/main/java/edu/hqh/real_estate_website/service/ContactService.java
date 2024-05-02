@@ -3,13 +3,10 @@ package edu.hqh.real_estate_website.service;
 import edu.hqh.real_estate_website.dto.request.ContactRequest;
 import edu.hqh.real_estate_website.dto.response.ContactResponse;
 import edu.hqh.real_estate_website.entity.Contact;
-import edu.hqh.real_estate_website.entity.Post;
-import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.ContactMapper;
 import edu.hqh.real_estate_website.repository.ContactRepository;
-import edu.hqh.real_estate_website.repository.PostRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +28,6 @@ import java.util.List;
 @Service
 public class ContactService {
     ContactRepository contactRepository;
-    PostRepository postRepository;
     UserRepository userRepository;
     ContactMapper contactMapper;
     UserService userService;

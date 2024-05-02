@@ -3,7 +3,6 @@
 <head th:replace = "~{fragments/header :: header}">
 <body>
 <section class="d-flex align-items-center justify-content-center my-5">
-
         <div style = "
                         width: 60vw;
                         height: 70vh;
@@ -18,29 +17,37 @@
                             <div class="row">
                                 <div class=" col-6 col mb-3">
                                     <p class="small text-muted mb-1">Transaction Date</p>
-                                    <p>...</p>
+                                    <p th:text="${transaction.transactionDate}"></p>
                                 </div>
                                 <div class=" col-6 col mb-3">
                                     <p class="small text-muted mb-1">Sender</p>
-                                    <p>...</p>
+                                    <p th:text="${transaction.sender}"></p>
                                 </div>
                                 <div class=" col-6 col mb-3">
                                     <p class="small text-muted mb-1">Receiver</p>
-                                    <p>...</p>
+                                    <p th:text="${transaction.receiver}"></p>
                                 </div>
+
                                 <div class=" col-6 col mb-3">
-                                    <p class="small text-muted mb-1">Price</p>
-                                    <p>...</p>
+
                                 </div>
+                                <form
+                                        class="d-flex align-items-center justify-content-center flex-row"
+                                        method="get"
+                                        style= "gap: 1rem;"
+                                        role= "form"
+                                        th:action="@{/transaction/create/ }"
+                                >
+                                    <input class="form-control-sm w-50"
+                                           type="text"
+                                           name="price"
+                                           placeholder="input price"
+                                           required >
+                                    <button th:replace = "~{fragments/button :: smallCheckBtn}"></button>
+                                    <a th:replace = "~{fragments/button :: returnMyTransactions}"></a>
+                                </form>
                             </div>
 
-                            <p class="mt-4 pt-2 mb-0">Do you have any problem? <a href="" style="color: #f37a27;">Please contact
-                                us</a>
-                            </p>
-
-                            <div class="d-grid justify-content-center my-3">
-                                <button id="submit" type="submit" class="btn btn-outline-success btn-lg">OK</button>
-                            </div>
 
                         </div>
                     </div>
