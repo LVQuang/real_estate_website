@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RequestMapping("/post")
@@ -42,6 +44,9 @@ public class PostController {
             pageNumber-=1;
         if(pageNumber == null)
             pageNumber =0;
+
+        if(postService.getAll().isEmpty())
+            return "index";
 
         var result = postService.getAllPostsPage(pageNumber);
         var posts = result.getContent();
@@ -63,10 +68,16 @@ public class PostController {
                            required = false, defaultValue = "0") Integer pageNumber
     )
     {
+
         if (pageNumber != null && pageNumber > 0)
             pageNumber-=1;
         if(pageNumber == null)
             pageNumber =0;
+
+        if(postService.getMyPosts().isEmpty()) {
+            log.info("Check my posts");
+            return "layout/myPosts";
+        }
 
         var result = postService.getAllMyPostPage(pageNumber);
         var posts = result.getContent();

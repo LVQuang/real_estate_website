@@ -13,10 +13,6 @@
         <td th:text="${contact.receiver}"></td>
         <td th:text="${contact.message}"></td>
         <td th:text="${contact.contactDate.toString()}"></td>
-        <td>
-            <button type="button" th:text="'Details'" th:attr="data-contact-id=${contact.id}" class="btn btn-outline-success detail-btn"></button>
-        </td>
-
       </tr>
   </tbody>
 </table>

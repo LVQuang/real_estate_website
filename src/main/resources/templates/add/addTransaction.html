@@ -17,7 +17,7 @@
                             <div class="row">
                                 <div class=" col-6 col mb-3">
                                     <p class="small text-muted mb-1">Transaction Date</p>
-                                    <p th:text="${transaction.transactionDate}"></p>
+                                    <p th:text="${transaction.transactionDate.toString()}"></p>
                                 </div>
                                 <div class=" col-6 col mb-3">
                                     <p class="small text-muted mb-1">Sender</p>
@@ -33,16 +33,17 @@
                                 </div>
                                 <form
                                         class="d-flex align-items-center justify-content-center flex-row"
-                                        method="get"
+                                        method="post"
                                         style= "gap: 1rem;"
                                         role= "form"
-                                        th:action="@{/transaction/create/ }"
+                                        th:action="@{/transaction/create}"
                                 >
                                     <input class="form-control-sm w-50"
                                            type="text"
                                            name="price"
-                                           placeholder="input price"
-                                           required >
+                                           th:placeholder="${postId}"
+                                           required>
+                                    <input class="form-control" type="hidden" name="postId" th:value="${postId}">
                                     <button th:replace = "~{fragments/button :: smallCheckBtn}"></button>
                                     <a th:replace = "~{fragments/button :: returnMyTransactions}"></a>
                                 </form>

@@ -1,5 +1,6 @@
 package edu.hqh.real_estate_website.controller;
 
+import edu.hqh.real_estate_website.dto.request.TransactionRequest;
 import edu.hqh.real_estate_website.dto.response.TransactionResponse;
 import edu.hqh.real_estate_website.service.PostService;
 import edu.hqh.real_estate_website.service.TransactionService;
@@ -11,10 +12,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -27,9 +25,17 @@ public class TransactionController {
     TransactionService transactionService;
     UserService userService;
     PostService postService;
+    @PostMapping("/create")
+    String postCreate(@RequestParam(name = "price") Integer price,
+                  @RequestParam(name = "postId") String postId) {
+        var request = TransactionRequest.builder()
+                .price(Double.valueOf(price)).build();
+        transactionService.create(request, postId);
+        return "index";
+    }
 
     @GetMapping("/create/{postId}")
-    String create(@PathVariable String postId, Model model) {
+    String getCreate(@PathVariable String postId, Model model) {
 
         var transaction = TransactionResponse.builder()
                 .transactionDate(LocalDate.now())
@@ -37,9 +43,11 @@ public class TransactionController {
                 .receiver(postService.getById(postId).getUser().getName())
                 .build();
 
+
+        var tmpPostId = postId;
+
         model.addAttribute("transaction", transaction);
-        model.addAttribute("postId", postId);
-//        transactionService.create();
+        model.addAttribute("postId", tmpPostId);
         return "add/addTransaction";
     }
 
@@ -80,6 +88,9 @@ public class TransactionController {
         if(pageNumber == null)
             pageNumber =0;
 
+        if (transactionService.getAll().isEmpty())
+            return "/layout/transactions";
+
         var result = transactionService.getAllContactsPage(pageNumber);
         var transactions = result.getContent();
         model.addAttribute("transactions", transactions);
@@ -102,6 +113,9 @@ public class TransactionController {
             pageNumber-=1;
         if(pageNumber == null)
             pageNumber =0;
+
+        if (transactionService.getMyTransactions().isEmpty())
+            return "layout/userTransactions";
 
         var result = transactionService.getAllContactsUserPage(pageNumber);
         var transactions = result.getContent();
