@@ -1,7 +1,6 @@
 package edu.hqh.real_estate_website.service;
 
 import edu.hqh.real_estate_website.entity.Image;
-import edu.hqh.real_estate_website.entity.Post;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.repository.ImageRepository;
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

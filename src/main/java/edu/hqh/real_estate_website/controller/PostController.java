@@ -1,6 +1,8 @@
 package edu.hqh.real_estate_website.controller;
 
 import edu.hqh.real_estate_website.dto.request.*;
+import edu.hqh.real_estate_website.dto.response.PostDetailResponse;
+import edu.hqh.real_estate_website.entity.Image;
 import edu.hqh.real_estate_website.mapper.PostMapper;
 import edu.hqh.real_estate_website.service.ImageService;
 import edu.hqh.real_estate_website.service.PostService;
@@ -8,7 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RequestMapping("/post")
@@ -42,7 +43,6 @@ public class PostController {
         if(pageNumber == null)
             pageNumber =0;
 
-        log.info("Current Page: " + pageNumber);
         var result = postService.getAllPostsPage(pageNumber);
         var posts = result.getContent();
         model.addAttribute("posts", posts);
@@ -85,15 +85,13 @@ public class PostController {
     @GetMapping("/addPost")
     String getAddPost(Model model)
     {
-        UserAddPostRequest user = new UserAddPostRequest();
+        AddPostRequest user = new AddPostRequest();
         model.addAttribute("user", user);
         return "add/addPost";
     }
 
     @PostMapping("/addPost")
-    String postAddPost(@Valid @ModelAttribute("user") UserAddPostRequest user, RedirectAttributes redirectAttributes){
-
-
+    String postAddPost(@Valid @ModelAttribute("user") AddPostRequest user, RedirectAttributes redirectAttributes){
         var request = postMapper.toAddPostRequest(user);
         var post = postService.create(request);
 
@@ -125,9 +123,14 @@ public class PostController {
     }
 
     @GetMapping("/postDetail")
-    String getPostDetail()
+    String getPostDetail(Model model, @RequestParam("id") String postId)
     {
-        return "layout/postDetail";
+        PostDetailResponse postDetailResponse = postService.getById(postId);
+        List<Image> images = postService.getImagesByPostId(postId);
+        model.addAttribute("postDetailRep", postDetailResponse);
+        model.addAttribute("images", images);
+
+        return "/online_template/postDetail";
     }
 
     @GetMapping("/delete/{pageNumber}")

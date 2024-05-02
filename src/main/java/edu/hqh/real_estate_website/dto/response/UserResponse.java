@@ -16,6 +16,7 @@ public class UserResponse {
     String password;
     String email;
     String phone;
+    String gender;
     Set<RoleResponse> roles;
     Set<TransactionResponse> transactions;
     Set<ContactResponse> contacts;

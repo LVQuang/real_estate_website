@@ -51,6 +51,13 @@
             <li class="nav-item">
                 <a class="nav-link"
                    sec:authorize="hasRole('ADMIN')"
+                   href="/payment/checkPay">Check Money
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link"
+                   sec:authorize="hasRole('ADMIN')"
                    href="/contact/null?page=0">Contacts
                 </a>
             </li>
