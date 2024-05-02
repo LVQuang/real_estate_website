@@ -307,9 +307,6 @@
                             <div class="comment-form">
                                 <div class="image-container" th:if="${images.size() > 0}">
                                     <div class="d-flex">
-<!--                                        <div th:each="image, iterStat : ${images}" class="image-item" th:if="${iterStat.index > 0 && iterStat.index < 4}">-->
-<!--                                            <img th:src="@{'/display/' + ${image.id}}" alt="Image" class="img-fluid" />-->
-<!--                                        </div>-->
                                         <div th:each="image, iterStat : ${images}" class="image-item">
                                             <img th:src="@{'/display/' + ${image.id}}" alt="Image" class="img-fluid" />
                                         </div>
