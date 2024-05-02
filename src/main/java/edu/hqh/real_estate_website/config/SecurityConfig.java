@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -56,8 +57,8 @@ public class SecurityConfig{
                 )
                 .authorizeHttpRequests(request ->
                         request
-//                                .requestMatchers(new OrRequestMatcher(requestMatchers)).permitAll()
-                                .anyRequest().permitAll())
+                                .requestMatchers(new OrRequestMatcher(requestMatchers)).permitAll()
+                                .anyRequest().authenticated())
                 .build();
     }
 
