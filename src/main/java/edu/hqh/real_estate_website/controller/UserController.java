@@ -30,7 +30,7 @@ public class UserController {
         log.info(request.getId());
         var response = userService.getById(request.getId());
         model.addAttribute("response",response);
-        return "/user/updateMyInfo";
+        return "/user/myInfo";
     }
 
     @GetMapping("/userDetail/{userId}")

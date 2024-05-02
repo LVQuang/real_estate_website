@@ -29,7 +29,6 @@ import java.text.ParseException;
 @RequestMapping("/auth")
 @Controller
 public class AuthenticateController {
-    private final UserRepository userRepository;
     AuthenticationService authenticationService;
     AuthenticationMapper authenticationMapper;
     ForgotPasswordMapper forgotPasswordMapper;
@@ -99,7 +98,8 @@ public class AuthenticateController {
     String postRegister(@Valid @ModelAttribute("user") UserRegisterRequest user)
     {
         var request = registerMapper.toRegisterRequest(user);
-        if(userRepository.existsByName(user.getName()))
+        boolean checkName = authenticationService.checkNameExist(user);
+        if(checkName)
             return "redirect:/auth/register?user_exists_name";
         authenticationService.register(request);
         return "redirect:/auth/login?register_success";
@@ -112,31 +112,38 @@ public class AuthenticateController {
 
     @GetMapping("/ForgotPassword")
     String getForgot(Model model){
-        UserForgotPasswordRequest user = new UserForgotPasswordRequest();
+        ForgotPasswordRequest user = new ForgotPasswordRequest();
         model.addAttribute("user", user);
         return "password/forgotPassword";
     }
 
+    @GetMapping("/checkEmail")
+    String waitEmail() {
+        return "password/wait";
+    }
+
     @PostMapping("/ForgotPassword")
-    String postForgot(@Valid @ModelAttribute("user") UserForgotPasswordRequest user){
+    String postForgot(@Valid @ModelAttribute("user") ForgotPasswordRequest user){
         var authRequest = forgotPasswordMapper.toForgotPasswordRequest(user);
-        if (!userRepository.existsByEmail(user.getEmail()))
+        boolean checkEmail = authenticationService.checkEmailExist(user);
+        if (!checkEmail)
             return "redirect:/auth/ForgotPassword?email_not_exists";
         authenticationService.forgotPassword(authRequest);
-        return "redirect:/auth/ForgotPassword?check_email";
+        return "redirect:/auth/checkEmail?check_email";
     }
 
     @GetMapping("/ResetPassword")
     String getReset(Model model){
-        UserResetPasswordRequest user = new UserResetPasswordRequest();
+        ResetPasswordRequest user = new ResetPasswordRequest();
         model.addAttribute("user", user);
         return "password/resetPassword";
     }
 
     @PostMapping("/ResetPassword")
-    String postReset(@Valid @ModelAttribute("user") UserResetPasswordRequest user){
+    String postReset(@Valid @ModelAttribute("user") ResetPasswordRequest user){
         var authRequest = forgotPasswordMapper.toResetPasswordRequest(user);
-        if (!userRepository.existsByEmail(user.getEmail()))
+        var checkEmail = authenticationService.checkEmailExistForReset(user);
+        if (!checkEmail)
             return "redirect:/auth/ResetPassword?email_not_exist";
         authenticationService.resetPassword(authRequest);
         return "redirect:/auth/login?resetPass_success";
