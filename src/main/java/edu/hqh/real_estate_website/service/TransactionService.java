@@ -50,6 +50,7 @@ public class TransactionService {
         transaction.setState("Solving");
         transaction.setSender(sender.getName());
         transaction.setReceiver(receiver.getName());
+        transaction.setPost(post);
 
         transactionRepository.save(transaction);
 
@@ -81,6 +82,11 @@ public class TransactionService {
         return transactions.stream()
                 .map(transactionMapper::toResponse)
                 .toList();
+    }
+
+    public List<Transaction> getMyTransactions() {
+        var sender = userService.getCurrentUser().getName();
+        return transactionRepository.findBySender(sender);
     }
 
     public Page<Transaction> getAllContactsPage(int page) {
