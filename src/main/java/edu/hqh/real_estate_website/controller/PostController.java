@@ -87,7 +87,7 @@ public class PostController {
     {
         AddPostRequest user = new AddPostRequest();
         model.addAttribute("user", user);
-        return "/addPost";
+        return "add/addPost";
     }
 
     @PostMapping("/addPost")
@@ -104,7 +104,7 @@ public class PostController {
     String getAddImages(Model model, @RequestParam("post_id") String postId )
     {
         model.addAttribute("post_id", postId);
-        return "/addImages";
+        return "add/addImages";
     }
 
     @PostMapping("/addImages")
@@ -116,6 +116,11 @@ public class PostController {
         return "redirect:/post/1?outPage";
     }
 
+    @GetMapping("/posts")
+    String getPostList(Model model)
+    {
+        return "listing/posts";
+    }
 
     @GetMapping("/postDetail")
     String getPostDetail(Model model, @RequestParam("id") String postId)
@@ -127,5 +132,10 @@ public class PostController {
 
         return "/online_template/postDetail";
     }
-    
+
+    @GetMapping("/delete/{pageNumber}")
+    String deletePost(@PathVariable String pageNumber) {
+        postService.delete(pageNumber);
+        return "redirect:/post/myPost/null?page=0";
+    }
 }

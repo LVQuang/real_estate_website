@@ -47,6 +47,7 @@ public class TransactionService {
         var receiver = post.getUser();
 
         transaction.setTransactionDate(LocalDate.now());
+        transaction.setState("Solving");
         transaction.setSender(sender.getName());
         transaction.setReceiver(receiver.getName());
 
@@ -63,6 +64,18 @@ public class TransactionService {
         return transactionMapper.toResponse(transaction);
     }
 
+    public void accept(String transactionId) {
+        var transaction = getById(transactionId);
+        transaction.setState("Accept");
+        transactionRepository.save(transaction);
+    }
+
+    public void cancel(String transactionId) {
+        var transaction = getById(transactionId);
+        transaction.setState("cancel");
+        transactionRepository.save(transaction);
+    }
+
     public List<TransactionResponse> getAll() {
         var transactions = transactionRepository.findAll();
         return transactions.stream()
@@ -73,6 +86,12 @@ public class TransactionService {
     public Page<Transaction> getAllContactsPage(int page) {
         var result = transactionRepository.findAll();
         return getAllTransactionsPageImpl(page, result);
+    }
+
+    public Transaction getById(String transactionId) {
+        var transaction = transactionRepository.
+                findById(transactionId).orElseThrow(() -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
+        return transaction;
     }
 
     public Page<Transaction> getAllContactsUserPage(int page) {

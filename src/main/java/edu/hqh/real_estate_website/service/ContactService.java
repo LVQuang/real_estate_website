@@ -3,13 +3,10 @@ package edu.hqh.real_estate_website.service;
 import edu.hqh.real_estate_website.dto.request.ContactRequest;
 import edu.hqh.real_estate_website.dto.response.ContactResponse;
 import edu.hqh.real_estate_website.entity.Contact;
-import edu.hqh.real_estate_website.entity.Post;
-import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.ErrorCode;
 import edu.hqh.real_estate_website.exception.AppException;
 import edu.hqh.real_estate_website.mapper.ContactMapper;
 import edu.hqh.real_estate_website.repository.ContactRepository;
-import edu.hqh.real_estate_website.repository.PostRepository;
 import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,21 +28,18 @@ import java.util.List;
 @Service
 public class ContactService {
     ContactRepository contactRepository;
-    PostRepository postRepository;
     UserRepository userRepository;
     ContactMapper contactMapper;
     UserService userService;
 
-    public ContactResponse create(ContactRequest request, String postId) {
+    public ContactResponse create(ContactRequest request, String userId) {
         var contact = contactMapper.convertEntity(request);
         var senderName = SecurityContextHolder.getContext().getAuthentication().getName();
         var sender = userRepository.findByName(senderName).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
 
-        var post = postRepository.findById(postId).orElseThrow(()
+        var receiver = userRepository.findById(userId).orElseThrow(()
                 -> new AppException(ErrorCode.ITEM_DONT_EXISTS));
-        var receiver = post.getUser();
-
 
         contact.setContactDate(LocalDate.now());
         contact.setSender(sender.getName());
