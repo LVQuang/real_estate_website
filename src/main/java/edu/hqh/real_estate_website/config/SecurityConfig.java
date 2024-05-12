@@ -3,7 +3,6 @@ package edu.hqh.real_estate_website.config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,8 +35,6 @@ public class SecurityConfig{
     @Value("${jwt.signerKey}")
     private String signerKey;
 
-    @Autowired
-    private CustomJwtDecoder customJwtDecoder;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         List<RequestMatcher> requestMatchers = new ArrayList<>();
@@ -51,9 +48,9 @@ public class SecurityConfig{
                                 .bearerTokenResolver(this::tokenExtractor)
                                 .jwt(jwtConfigurer ->
                                         jwtConfigurer
-                                                .decoder(customJwtDecoder)
+                                                .decoder(jwtDecoder())
                                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+//                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 )
                 .authorizeHttpRequests(request ->
                         request
