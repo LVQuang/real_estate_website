@@ -1,7 +1,10 @@
 package edu.hqh.real_estate_website.dto.request;
 
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -9,8 +12,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateUserRequest {
     String name;
+    @Size(min = 5, message = "Password at least 5 characters")
     String password;
     String email;
     String phone;
     String userGender;
+    LocalDate dob;
 }

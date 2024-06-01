@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -22,6 +23,7 @@ public class User {
     @Column(nullable = false, unique = true)
     String email;
     String phone;
+    LocalDate dob;
     UserGender userGender;
     @ManyToMany
     Set<Role> roles;
