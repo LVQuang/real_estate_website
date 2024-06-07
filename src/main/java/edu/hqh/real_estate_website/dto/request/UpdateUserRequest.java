@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateUserRequest {
     String name;
-    @Size(min = 5, message = "Password at least 5 characters")
+    @Size(min = 5, message = "PASSWORD_INVALID")
     String password;
     String phone;
     String userGender;

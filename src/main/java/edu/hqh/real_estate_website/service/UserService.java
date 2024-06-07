@@ -6,6 +6,8 @@ import edu.hqh.real_estate_website.dto.response.UserDetailResponse;
 import edu.hqh.real_estate_website.dto.response.UserListResponse;
 import edu.hqh.real_estate_website.entity.User;
 import edu.hqh.real_estate_website.enums.UserGender;
+import edu.hqh.real_estate_website.exception.AppException;
+import edu.hqh.real_estate_website.exception.ErrorCode;
 import edu.hqh.real_estate_website.mapper.UserMapper;
 import edu.hqh.real_estate_website.repository.UserRepository;
 import lombok.AccessLevel;
@@ -26,7 +28,7 @@ public class UserService {
 
     public void createUser(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.getEmail()))
-            throw new RuntimeException("Email belongs to other user");
+            throw new AppException(ErrorCode.USER_EXISTS);
 
         var user = userMapper.toUserEntity(request);
 
@@ -65,6 +67,6 @@ public class UserService {
 
     private User getUser(String id) {
         return userRepository.findById(id).orElseThrow(()
-                -> new RuntimeException("User don't exists"));
+                -> new AppException(ErrorCode.USER_NOT_EXISTS));
     }
 }

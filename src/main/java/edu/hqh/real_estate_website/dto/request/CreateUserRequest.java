@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateUserRequest {
     String name;
-    @Size(min = 5, message = "Password at least 5 characters")
+    @Size(min = 5, message = "PASSWORD_INVALID")
     String password;
     String email;
     String phone;
